@@ -1,0 +1,19 @@
+{
+  "name": "nextomni",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NextOmni Ecosystem — Flagship Multi-Domain Personal Operating System",
+  "author": "Ezra Lai",
+  "license": "MIT",
+  "scripts": {
+    "dev": "python -m http.server 5000",
+    "start": "python -m http.server 5000",
+    "status": "powershell -File ./run_ecosystem.ps1 -Status",
+    "test:all": "powershell -File ./run_ecosystem.ps1 -TestAll",
+    "verify:all": "powershell -File ./run_ecosystem.ps1 -VerifyAll",
+    "serve:landing": "powershell -File ./run_ecosystem.ps1 -ServeLanding",
+    "serve:study": "powershell -File ./run_ecosystem.ps1 -ServeStudy",
+    "serve:life": "powershell -File ./run_ecosystem.ps1 -ServeLife",
+    "serve:intel": "powershell -File ./run_ecosystem.ps1 -ServeIntelligence"
+  }
+}

@@ -1,0 +1,25 @@
+# NextOmni Master Portal (.gitignore)
+
+# Sub-repositories (independent repositories with their own remotes)
+/nextomni-finance/
+/nextomni-intelligence/
+/nextomni-life/
+/nextomni-study/
+
+# Dependencies & Build
+node_modules/
+.next/
+dist/
+build/
+out/
+.cache/
+
+# Environment & Local Secrets
+.env
+.env.local
+.env.*.local
+
+# OS & Logs
+*.log
+.DS_Store
+Thumbs.db

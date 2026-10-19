@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NextOmni Ecosystem — Flagship Multi-Domain Personal Operating System</title>
+  <meta name="description" content="NextOmni is a production-grade, multi-domain personal operating system unifying NextOmni Life, NextOmni Study, NextOmni Finance, and NextOmni Intelligence. Authored by Ezra Lai." />
+  <meta name="author" content="Ezra Lai" />
+  <meta name="keywords" content="NextOmni, Ezra Lai, Personal Operating System, FSRS, Spaced Repetition, FinTech, Machine Learning, Circadian Rhythm, Distributed Systems" />
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="NextOmni Ecosystem — Multi-Domain Personal OS" />
+  <meta property="og:description" content="Unified engineering portfolio & personal OS running on 100% free-tier production cloud ($0/mo forever) with zero mockups and real ACID telemetry." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient Neural Canvas Background -->
+  <canvas id="neural-canvas"></canvas>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-orb orb-indigo"></div>
+  <div class="ambient-orb orb-cyan"></div>
+  <div class="ambient-orb orb-emerald"></div>
+
+  <!-- Header Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-link" id="brand-logo" aria-label="NextOmni Home">
+        <div class="brand-emblem">
+          <svg class="emblem-svg" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="url(#brand-grad)" stroke-width="2" stroke-dasharray="3 3"/>
+            <polygon points="16,6 25,12 25,22 16,28 7,22 7,12" stroke="url(#brand-grad)" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="16" r="4" fill="#06b6d4"/>
+            <defs>
+              <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1"/>
+                <stop offset="0.5" stop-color="#06b6d4"/>
+                <stop offset="1" stop-color="#10b981"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">NEXT<span class="accent-text">OMNI</span></span>
+          <span class="brand-subtitle">ECOSYSTEM MASTER OS</span>
+        </div>
+      </a>
+
+      <!-- Live Heartbeat Status Badge -->
+      <div class="system-status-pill" id="system-status-pill">
+        <span class="pulse-dot"></span>
+        <span class="status-label">4 PILLARS OPERATIONAL</span>
+        <span class="status-meta font-mono">$0/mo CLOUD</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#modules" class="nav-link">Pillars</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#sandbox" class="nav-link">Live Sandbox</a>
+        <a href="#runbook" class="nav-link">Cloud Runbook</a>
+        <a href="#terminal" class="nav-link">Ecosystem CLI</a>
+      </nav>
+
+      <!-- Header Action Items -->
+      <div class="nav-actions">
+        <!-- Procedural 40Hz Audio Toggle -->
+        <button id="soundscape-btn" class="icon-btn" title="Toggle 40Hz Binaural Gamma Focus Soundscape" aria-label="Soundscape toggle">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path id="audio-wave-1" d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span class="audio-btn-label">40Hz Binaural</span>
+        </button>
+
+        <!-- Recruiter / GitHub CTA -->
+        <a href="https://github.com/ezralai" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="github-cta">
+          <svg class="icon-svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span>Ezra Lai • Portfolio</span>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-toggle" class="mobile-toggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section" id="hero">
+      <div class="section-container">
+        <!-- Eyebrow Badge -->
+        <div class="hero-badge animate-fade-in">
+          <span class="badge-sparkle">✦</span>
+          <span class="badge-text">PRODUCTION MULTI-DOMAIN PERSONAL OPERATING SYSTEM</span>
+          <span class="badge-divider">•</span>
+          <span class="badge-author">AUTHORED BY EZRA LAI</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="hero-title animate-slide-up">
+          Unified Cognitive, Financial & Academic Intelligence
+          <span class="hero-gradient-text">In a Single Sovereign OS</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="hero-subtitle animate-slide-up delay-1">
+          A flagship distributed ecosystem architected with <strong class="text-white">Next.js 15</strong>, <strong class="text-white">Laravel 11</strong>, <strong class="text-white">FastAPI</strong>, <strong class="text-white">PostgreSQL 16</strong>, and <strong class="text-white">Applied Causal ML</strong>. Deployed on <strong class="text-emerald">100% Free-Tier Production Cloud ($0/mo forever)</strong> with zero mockups, live ACID guarantees, and cross-module telemetry ingestion.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="hero-actions animate-slide-up delay-2">
+          <a href="#modules" class="btn btn-hero-primary" id="cta-explore">
+            <span>Explore 4 Core Modules</span>
+            <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#sandbox" class="btn btn-hero-secondary" id="cta-sandbox">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>Interactive Recruiter Sandbox</span>
+          </a>
+          <a href="#terminal" class="btn btn-hero-terminal" id="cta-terminal">
+            <span class="font-mono">$ ./run_ecosystem.ps1</span>
+          </a>
+        </div>
+
+        <!-- Metric Highlights Ticker -->
+        <div class="hero-metrics-grid animate-slide-up delay-3">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon icon-emerald">💎</span>
+              <span class="metric-tag">CORE PILLARS</span>
+            </div>
+            <div class="metric-value">4 Modules</div>
+            <div class="metric-desc">Life • Study • Finance • Intelligence</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon icon-cyan">☁️</span>
+              <span class="metric-tag">PRODUCTION HOSTING</span>
+            </div>
+            <div class="metric-value">$0.00 / mo</div>
+            <div class="metric-desc">100% Free Tier Forever • Edge + DB</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon icon-indigo">🧪</span>
+              <span class="metric-tag">VERIFIED TESTS</span>
+            </div>
+            <div class="metric-value">93 Assertions</div>
+            <div class="metric-desc">Vitest 22 • Pest 66 • Python ML 5</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-icon icon-amber">🛡️</span>
+              <span class="metric-tag">DATA INTEGRITY</span>
+            </div>
+            <div class="metric-value">ACID + UUIDv7</div>
+            <div class="metric-desc">BCMath Precision • SHA-256 Hashes</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The 4 Core Modules Showcase Section -->
+    <section class="section modules-section" id="modules">
+      <div class="section-container">
+        <div class="section-header">
+          <div class="section-eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>THE 4 ECOSYSTEM PILLARS</span>
+          </div>
+          <h2 class="section-title">Engineered Across Four Specialized Domains</h2>
+          <p class="section-desc">
+            Each pillar functions as an independent, fully test-covered engineering system while streaming state and telemetry into the unified NextOmni intelligence data store.
+          </p>
+        </div>
+
+        <!-- Modules Grid -->
+        <div class="modules-grid">
+
+          <!-- 1. NextOmni Life -->
+          <article class="module-card card-life" id="module-life">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="module-header">
+                <div class="module-icon-wrap icon-life">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78L12 20.67l7.65-7.66.77-.78a5.4 5.4 0 0 0 0-7.65z"></path>
+                    <path d="M12 9v4"></path>
+                    <path d="M12 17h.01"></path>
+                  </svg>
+                </div>
+                <div class="module-meta">
+                  <span class="module-pill pill-emerald">PILLAR 1 • HUMAN FLOURISHING</span>
+                  <span class="module-status"><span class="status-dot-green"></span> Port :3000</span>
+                </div>
+              </div>
+
+              <h3 class="module-title">nextomni-life</h3>
+              <p class="module-subtitle">Circadian Energy Rhythm & Habit Streak Engine</p>
+
+              <p class="module-text">
+                Flagship personal life operating system engineered to optimize biological focus cycles and atomic habits. Integrates Dr. Andrew Huberman's circadian protocol, procedural 40Hz binaural acoustics, and cognitive behavioral therapy (CBT) reflection debriefs.
+              </p>
+
+              <div class="tech-stack-chips">
+                <span class="chip">Next.js 15</span>
+                <span class="chip">React 19</span>
+                <span class="chip">FastAPI Python 3.14</span>
+                <span class="chip">Prisma ORM</span>
+                <span class="chip">Web Audio API</span>
+                <span class="chip">PWA Ready</span>
+              </div>
+
+              <div class="feature-checklist">
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>365-Day SVG Habit Heatmap:</strong> GitHub-style streak logging with offline cache</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Huberman Circadian Rhythms:</strong> Real-time cortisol/melatonin timing alerts</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Procedural 40Hz Binaural Beats:</strong> Zero-sample synthetic gamma focus wave</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>CBT Evening Reflection:</strong> AI debrief powered by FastAPI sentiment analysis</span>
+                </div>
+              </div>
+
+              <div class="module-telemetry-box">
+                <div class="telemetry-label">Live Telemetry Snapshot</div>
+                <div class="telemetry-row">
+                  <span class="t-key">Current Streak:</span>
+                  <span class="t-val text-emerald">14 Days (Active)</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Circadian Phase:</span>
+                  <span class="t-val text-cyan" id="life-circadian-text">Calculating...</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Local App:</span>
+                  <span class="t-val"><a href="http://localhost:3000" target="_blank" class="link-hover">http://localhost:3000 ↗</a></span>
+                </div>
+              </div>
+
+              <div class="module-card-footer">
+                <button class="btn btn-outline" onclick="launchSandboxTab('life')">Test Habit & 40Hz Engine</button>
+                <a href="#architecture" class="btn btn-text">View Dataflow →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2. NextOmni Study -->
+          <article class="module-card card-study" id="module-study">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="module-header">
+                <div class="module-icon-wrap icon-study">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+                  </svg>
+                </div>
+                <div class="module-meta">
+                  <span class="module-pill pill-indigo">PILLAR 2 • ACADEMIC MASTERY</span>
+                  <span class="module-status"><span class="status-dot-green"></span> Port :3001</span>
+                </div>
+              </div>
+
+              <h3 class="module-title">nextomni-study</h3>
+              <p class="module-subtitle">FSRS-4.5 Scheduler & Dynamic Timetable Matrix</p>
+
+              <p class="module-text">
+                Rigorous cognitive academic operating system. Implements Free Spaced Repetition Scheduling (FSRS-4.5) for mathematical memory retention, university schedule conflict matrix solver, and AI syllabus decomposition.
+              </p>
+
+              <div class="tech-stack-chips">
+                <span class="chip">Next.js 15 App Router</span>
+                <span class="chip">TypeScript 5.7</span>
+                <span class="chip">FSRS-4.5 Algorithm</span>
+                <span class="chip">Vitest (22 Passing)</span>
+                <span class="chip">RFC 5545 iCal</span>
+                <span class="chip">OpenAPI 3.1</span>
+              </div>
+
+              <div class="feature-checklist">
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>FSRS-4.5 Spaced Repetition:</strong> S-R stability & difficulty differential equations</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Matrix Timetable Solver:</strong> Automatic classroom conflict detection & .ics export</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>What-If CGPA Modeler:</strong> Sensitivity analysis on upcoming grade thresholds</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Syllabus AI Parser:</strong> Atomic course deliverable decomposition</span>
+                </div>
+              </div>
+
+              <div class="module-telemetry-box">
+                <div class="telemetry-label">Live Telemetry Snapshot</div>
+                <div class="telemetry-row">
+                  <span class="t-key">Cumulative GPA:</span>
+                  <span class="t-val text-indigo">3.88 / 4.00</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Unit Test Suite:</span>
+                  <span class="t-val text-emerald">22/22 Passing (100%)</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Local App:</span>
+                  <span class="t-val"><a href="http://localhost:3001" target="_blank" class="link-hover">http://localhost:3001 ↗</a></span>
+                </div>
+              </div>
+
+              <div class="module-card-footer">
+                <button class="btn btn-outline" onclick="launchSandboxTab('study')">Run FSRS Reviewer</button>
+                <a href="http://localhost:3001/api/v1/openapi.json" target="_blank" class="btn btn-text">OpenAPI Spec ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. NextOmni Finance -->
+          <article class="module-card card-finance" id="module-finance">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="module-header">
+                <div class="module-icon-wrap icon-finance">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                    <path d="M6 15h2"></path>
+                    <path d="M10 15h6"></path>
+                  </svg>
+                </div>
+                <div class="module-meta">
+                  <span class="module-pill pill-cyan">PILLAR 3 • HIGH-PRECISION FINTECH</span>
+                  <span class="module-status"><span class="status-dot-green"></span> Laravel / Nuxt 3</span>
+                </div>
+              </div>
+
+              <h3 class="module-title">nextomni-finance</h3>
+              <p class="module-subtitle">Multi-Currency Ledger & Cryptographic Parser</p>
+
+              <p class="module-text">
+                Institutional-grade personal wealth & balance engine. Uses PHP 8.3 BCMath arbitrary-precision arithmetic, UUIDv7 sequential primary keys, and non-custodial Malaysian bank statement parsing (Maybank, CIMB, TNG, GrabPay) with SHA-256 deduplication.
+              </p>
+
+              <div class="tech-stack-chips">
+                <span class="chip">Laravel 11 (PHP 8.3)</span>
+                <span class="chip">Nuxt 3 (Vue 3)</span>
+                <span class="chip">PostgreSQL 16 (UUIDv7)</span>
+                <span class="chip">BCMath Precision</span>
+                <span class="chip">SHA-256 Deduplication</span>
+                <span class="chip">Scalar OpenAPI 3.1</span>
+              </div>
+
+              <div class="feature-checklist">
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Zero Float Loss:</strong> BCMath arbitrary decimal precision on every currency split</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Bank Statement Ingestion:</strong> Automated PDF/CSV parsing with idempotency keys</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>UUIDv7 Sequential PKs:</strong> High-throughput B-Tree index cache localization</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Pest Test Suite:</strong> 66 Automated tests with 550 deep assertions</span>
+                </div>
+              </div>
+
+              <div class="module-telemetry-box">
+                <div class="telemetry-label">Live Telemetry Snapshot</div>
+                <div class="telemetry-row">
+                  <span class="t-key">Tracked Net Worth:</span>
+                  <span class="t-val text-cyan">RM 36,121.45</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Cryptographic Engine:</span>
+                  <span class="t-val text-emerald">SHA-256 Verified</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Live Deploy:</span>
+                  <span class="t-val"><a href="https://nextomni-finance.vercel.app" target="_blank" class="link-hover">Vercel Production ↗</a></span>
+                </div>
+              </div>
+
+              <div class="module-card-footer">
+                <button class="btn btn-outline" onclick="launchSandboxTab('finance')">Test Precision Calculator</button>
+                <a href="https://nextomni-finance.onrender.com/docs" target="_blank" class="btn btn-text">Scalar Docs ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4. NextOmni Intelligence -->
+          <article class="module-card card-intelligence" id="module-intelligence">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="module-header">
+                <div class="module-icon-wrap icon-intelligence">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                    <path d="M12 2a10 10 0 0 1 10 10h-10V2z" opacity="0.4"></path>
+                    <path d="M12 12L2.5 7.5"></path>
+                    <path d="M12 12v9"></path>
+                  </svg>
+                </div>
+                <div class="module-meta">
+                  <span class="module-pill pill-amber">PILLAR 4 • DATA SCIENCE & ML</span>
+                  <span class="module-status"><span class="status-dot-green"></span> Port :8000</span>
+                </div>
+              </div>
+
+              <h3 class="module-title">nextomni-intelligence</h3>
+              <p class="module-subtitle">Feature Store, Causal Inference & Burnout Classifier</p>
+
+              <p class="module-text">
+                The centralized machine learning and statistical hub of the ecosystem. Aggregates telemetry across focus sessions, academic deadlines, financial strain, and circadian logs to train causal inference and 7-day burnout risk prediction models.
+              </p>
+
+              <div class="tech-stack-chips">
+                <span class="chip">PostgreSQL ETL Feature Store</span>
+                <span class="chip">R & Quarto Analytics</span>
+                <span class="chip">Python Scikit-Learn</span>
+                <span class="chip">FastAPI Microservice</span>
+                <span class="chip">Tableau LOD Storyboard</span>
+                <span class="chip">Two-Way ANOVA & Tukey HSD</span>
+              </div>
+
+              <div class="feature-checklist">
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>7-Day Burnout Classifier:</strong> Gradient Boosting Machine predicting cognitive fatigue</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Causal OLS Flow Models:</strong> Statistically robust habit-to-focus correlation tests</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Kaplan-Meier Survival Decay:</strong> Habit churn hazard rates modeling</span>
+                </div>
+                <div class="check-item">
+                  <span class="check-icon">✓</span>
+                  <span><strong>Automated Deload Triggers:</strong> Closed-loop safety recommendations back to LifeOS</span>
+                </div>
+              </div>
+
+              <div class="module-telemetry-box">
+                <div class="telemetry-label">Live Telemetry Snapshot</div>
+                <div class="telemetry-row">
+                  <span class="t-key">Current Burnout Risk:</span>
+                  <span class="t-val text-emerald">18.4% (Low / Deload Off)</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Feature Store ABT:</span>
+                  <span class="t-val text-amber">Active Ingestion</span>
+                </div>
+                <div class="telemetry-row">
+                  <span class="t-key">Local ML Engine:</span>
+                  <span class="t-val"><a href="http://localhost:8000/docs" target="_blank" class="link-hover">http://localhost:8000 ↗</a></span>
+                </div>
+              </div>
+
+              <div class="module-card-footer">
+                <button class="btn btn-outline" onclick="launchSandboxTab('intelligence')">Test Burnout Predictor</button>
+                <a href="#terminal" class="btn btn-text">Run ML Pipeline →</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Master Architecture & Cross-Module Telemetry Flow Section -->
+    <section class="section arch-section" id="architecture">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <div class="section-eyebrow justify-center">
+            <span class="eyebrow-dot"></span>
+            <span>SYSTEM TOPOLOGY & ACID TELEMETRY</span>
+          </div>
+          <h2 class="section-title">Master Ecosystem Architecture Flow</h2>
+          <p class="section-desc max-w-2xl mx-auto">
+            Interactive visualization showing how the 4 pillars interact across global edge networks, microservice compute containers, managed PostgreSQL persistence, and the data science causal feature store.
+          </p>
+        </div>
+
+        <!-- Interactive Architecture Flow Diagram Container -->
+        <div class="arch-diagram-wrapper">
+          <div class="arch-flow-diagram">
+            
+            <!-- Tier 1: Presentation / Edge -->
+            <div class="arch-tier-column">
+              <div class="tier-badge">EDGE PRESENTATION LAYER</div>
+              <div class="arch-node-box node-clickable" data-node="edge-fin">
+                <div class="node-icon icon-cyan">Nuxt 3</div>
+                <div class="node-content">
+                  <div class="node-title">NextOmni Finance Web</div>
+                  <div class="node-meta">Vue 3 • Pinia • Vercel Edge</div>
+                </div>
+                <div class="node-tag">Edge CDN</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="edge-life">
+                <div class="node-icon icon-emerald">Next 15</div>
+                <div class="node-content">
+                  <div class="node-title">NextOmni Life Web</div>
+                  <div class="node-meta">React 19 • App Router • PWA</div>
+                </div>
+                <div class="node-tag">Edge CDN</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="edge-study">
+                <div class="node-icon icon-indigo">Next 15</div>
+                <div class="node-content">
+                  <div class="node-title">NextOmni Study Web</div>
+                  <div class="node-meta">FSRS-4.5 • Timetable Matrix</div>
+                </div>
+                <div class="node-tag">Edge CDN</div>
+              </div>
+            </div>
+
+            <!-- Inter-Tier Flow Arrows -->
+            <div class="flow-connectors">
+              <div class="flow-arrow flow-1"><span>REST / Auth ➔</span></div>
+              <div class="flow-arrow flow-2"><span>HTTP / JSON ➔</span></div>
+              <div class="flow-arrow flow-3"><span>Route Handlers ➔</span></div>
+            </div>
+
+            <!-- Tier 2: Compute Gateway -->
+            <div class="arch-tier-column">
+              <div class="tier-badge">GATEWAY & COMPUTE TIER</div>
+              <div class="arch-node-box node-clickable" data-node="gateway-fin">
+                <div class="node-icon icon-cyan">PHP 8.3</div>
+                <div class="node-content">
+                  <div class="node-title">Laravel 11 REST API</div>
+                  <div class="node-meta">BCMath • Zend OPcache • Scalar</div>
+                </div>
+                <div class="node-tag">Render / Koyeb</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="gateway-life">
+                <div class="node-icon icon-emerald">Python</div>
+                <div class="node-content">
+                  <div class="node-title">FastAPI Life AI Engine</div>
+                  <div class="node-meta">Python 3.14 • Sentiment Analysis</div>
+                </div>
+                <div class="node-tag">Fly.io / Port 8000</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="gateway-study">
+                <div class="node-icon icon-indigo">Node 24</div>
+                <div class="node-content">
+                  <div class="node-title">Study Matrix Engine</div>
+                  <div class="node-meta">Matrix Solver • RFC 5545 iCal</div>
+                </div>
+                <div class="node-tag">Vercel Serverless</div>
+              </div>
+            </div>
+
+            <!-- Inter-Tier Flow Arrows -->
+            <div class="flow-connectors">
+              <div class="flow-arrow flow-pool"><span>PgBouncer ➔</span></div>
+              <div class="flow-arrow flow-pool"><span>Prisma ➔</span></div>
+              <div class="flow-arrow flow-pool"><span>ACID Stream ➔</span></div>
+            </div>
+
+            <!-- Tier 3: Managed Persistence -->
+            <div class="arch-tier-column">
+              <div class="tier-badge">MANAGED POSTGRESQL 16</div>
+              <div class="arch-node-box node-clickable" data-node="db-fin">
+                <div class="node-icon icon-cyan">Postgres</div>
+                <div class="node-content">
+                  <div class="node-title">finance_ledger</div>
+                  <div class="node-meta">UUIDv7 PKs • NUMERIC(15,4)</div>
+                </div>
+                <div class="node-tag">Supabase</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="db-life">
+                <div class="node-icon icon-emerald">Postgres</div>
+                <div class="node-content">
+                  <div class="node-title">life_os</div>
+                  <div class="node-meta">Circadian Logs & 365d Heatmap</div>
+                </div>
+                <div class="node-tag">Neon DB</div>
+              </div>
+
+              <div class="arch-node-box node-highlighted node-clickable" data-node="db-telemetry">
+                <div class="node-icon icon-amber">Store</div>
+                <div class="node-content">
+                  <div class="node-title">nextomni_telemetry</div>
+                  <div class="node-meta">Unified Cross-Module Feature Base</div>
+                </div>
+                <div class="node-tag">ACID Hub</div>
+              </div>
+            </div>
+
+            <!-- Inter-Tier Flow Arrows -->
+            <div class="flow-connectors">
+              <div class="flow-arrow flow-intelligence"><span>ETL Pipeline ➔</span></div>
+              <div class="flow-arrow flow-intelligence"><span>Feature Matrix ➔</span></div>
+              <div class="flow-arrow flow-intelligence"><span>Deload Feedback ➔</span></div>
+            </div>
+
+            <!-- Tier 4: Intelligence & Analytics -->
+            <div class="arch-tier-column">
+              <div class="tier-badge">INTELLIGENCE & CAUSAL ML</div>
+              <div class="arch-node-box node-clickable" data-node="ml-r">
+                <div class="node-icon icon-amber">R / Quarto</div>
+                <div class="node-content">
+                  <div class="node-title">Causal Inference</div>
+                  <div class="node-meta">Two-Way ANOVA & Tukey HSD</div>
+                </div>
+                <div class="node-tag">Statistical Hub</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="ml-py">
+                <div class="node-icon icon-amber">Scikit</div>
+                <div class="node-content">
+                  <div class="node-title">Python ML Classifier</div>
+                  <div class="node-meta">7-Day Burnout Risk GBM</div>
+                </div>
+                <div class="node-tag">Machine Learning</div>
+              </div>
+
+              <div class="arch-node-box node-clickable" data-node="ml-tab">
+                <div class="node-icon icon-amber">Tableau</div>
+                <div class="node-content">
+                  <div class="node-title">Executive LOD Dashboard</div>
+                  <div class="node-meta">Radar Clock KPI Storyboard</div>
+                </div>
+                <div class="node-tag">Business Intel</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Arch Node Inspector Info Card -->
+          <div class="arch-inspector-panel" id="arch-inspector">
+            <div class="inspector-badge">SYSTEM ARCHITECTURE INSPECTOR</div>
+            <div class="inspector-content">
+              <h4 id="inspector-title" class="inspector-title">NextOmni Telemetry Feature Store (Cross-Module Ingestion)</h4>
+              <p id="inspector-desc" class="inspector-desc">
+                High-throughput persistence layer built on PostgreSQL 16. Captures structured JSON telemetry from Study focus sessions, Life habit completions, and Finance expense velocity to feed the R & Python causal analytics engines.
+              </p>
+              <div class="inspector-meta" id="inspector-meta">
+                <span class="meta-item"><strong>Guarantees:</strong> 100% ACID Compliance</span>
+                <span class="meta-item"><strong>Connection Pool:</strong> PgBouncer Port 6543</span>
+                <span class="meta-item"><strong>Hosting Cost:</strong> $0.00 / month</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Recruiter Sandbox Section -->
+    <section class="section sandbox-section" id="sandbox">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <div class="section-eyebrow justify-center">
+            <span class="eyebrow-dot"></span>
+            <span>LIVE INTERACTIVE RECRUITER LAB</span>
+          </div>
+          <h2 class="section-title">Test Drive NextOmni's Core Algorithms Live</h2>
+          <p class="section-desc max-w-2xl mx-auto">
+            Interact with live client-side simulations of the key mathematical and cognitive engines powering all four pillars.
+          </p>
+        </div>
+
+        <!-- Sandbox Tabs Header -->
+        <div class="sandbox-tabs">
+          <button class="sandbox-tab-btn active" data-tab="life" id="tab-btn-life">
+            <span class="tab-icon">🌿</span>
+            <span>NextOmni Life: Habit & Circadian</span>
+          </button>
+          <button class="sandbox-tab-btn" data-tab="study" id="tab-btn-study">
+            <span class="tab-icon">🎓</span>
+            <span>NextOmni Study: FSRS-4.5 Scheduler</span>
+          </button>
+          <button class="sandbox-tab-btn" data-tab="finance" id="tab-btn-finance">
+            <span class="tab-icon">💳</span>
+            <span>NextOmni Finance: BCMath & SHA-256</span>
+          </button>
+          <button class="sandbox-tab-btn" data-tab="intelligence" id="tab-btn-intelligence">
+            <span class="tab-icon">🧠</span>
+            <span>NextOmni Intelligence: Burnout ML</span>
+          </button>
+        </div>
+
+        <!-- Sandbox Content Panels -->
+        <div class="sandbox-card">
+
+          <!-- 1. Life Interactive Panel -->
+          <div class="sandbox-panel active" id="sandbox-panel-life">
+            <div class="panel-grid">
+              <div class="panel-left">
+                <div class="panel-title-row">
+                  <h3 class="panel-title">Habit Streak Telemetry & Real-Time Circadian Rhythms</h3>
+                  <span class="badge-emerald">Live Huberman Protocol</span>
+                </div>
+                <p class="panel-desc">
+                  Demonstrating live habit tracking with streak arithmetic and a dynamic circadian clock that computes your current biological phase based on local solar time.
+                </p>
+
+                <!-- Interactive Habit Checklist -->
+                <div class="interactive-habits-list">
+                  <div class="habit-item-box" data-id="1">
+                    <button class="habit-checkbox active" onclick="toggleHabitSandbox(1)">✓</button>
+                    <div class="habit-details">
+                      <span class="habit-name">Morning Sunlight Protocol (10-15 mins)</span>
+                      <span class="habit-sub">Cortisol spike activation & retinal melanopsin trigger</span>
+                    </div>
+                    <span class="habit-streak-badge">🔥 14d</span>
+                  </div>
+
+                  <div class="habit-item-box" data-id="2">
+                    <button class="habit-checkbox active" onclick="toggleHabitSandbox(2)">✓</button>
+                    <div class="habit-details">
+                      <span class="habit-name">90-Minute Ultradian Deep Focus Session</span>
+                      <span class="habit-sub">Prefrontal cortex optimal glucose & dopamine window</span>
+                    </div>
+                    <span class="habit-streak-badge">🔥 12d</span>
+                  </div>
+
+                  <div class="habit-item-box" data-id="3">
+                    <button class="habit-checkbox" id="habit-check-3" onclick="toggleHabitSandbox(3)">○</button>
+                    <div class="habit-details">
+                      <span class="habit-name">40Hz Binaural Beats Acoustic Priming</span>
+                      <span class="habit-sub">Gamma oscillation synchronization (Web Audio)</span>
+                    </div>
+                    <span class="habit-streak-badge" id="habit-badge-3">🔥 8d</span>
+                  </div>
+                </div>
+
+                <!-- 40Hz Audio Wave Generator Control -->
+                <div class="audio-generator-card">
+                  <div class="audio-info">
+                    <div class="audio-title">Procedural 40Hz Binaural Soundscape Generator</div>
+                    <div class="audio-desc">Synthesized in real-time with Web Audio oscillators. No MP3 assets.</div>
+                  </div>
+                  <button class="btn btn-emerald-action" id="sandbox-audio-btn" onclick="toggleSoundscape()">
+                    <span id="sandbox-audio-text">Play 40Hz Gamma Soundscape</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Circadian Clock Widget -->
+              <div class="panel-right">
+                <div class="circadian-card">
+                  <div class="circadian-header">
+                    <span class="circadian-title">Biological Circadian Clock</span>
+                    <span class="circadian-time" id="circadian-clock-time">00:00:00</span>
+                  </div>
+                  <div class="circadian-dial-wrap">
+                    <div class="circadian-dial" id="circadian-dial">
+                      <div class="dial-hand" id="dial-hand"></div>
+                      <div class="dial-center"></div>
+                    </div>
+                  </div>
+                  <div class="circadian-details">
+                    <div class="phase-tag" id="current-phase-badge">Optimal Phase</div>
+                    <h4 class="phase-name" id="current-phase-title">Deep Recovery & Consolidation</h4>
+                    <p class="phase-action" id="current-phase-guidance">
+                      Melatonin secretion active. Growth hormone release and memory consolidation in progress. Minimize blue light photons.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Study Interactive Panel -->
+          <div class="sandbox-panel" id="sandbox-panel-study">
+            <div class="panel-grid">
+              <div class="panel-left">
+                <div class="panel-title-row">
+                  <h3 class="panel-title">FSRS-4.5 Spaced Repetition Memory Matrix</h3>
+                  <span class="badge-indigo">Algorithmic Flashcard</span>
+                </div>
+                <p class="panel-desc">
+                  Unlike legacy SM-2 (Anki), FSRS-4.5 uses 17 empirical parameters with power-law forgetting curves to compute precise Retrievability (R), Stability (S), and Difficulty (D).
+                </p>
+
+                <!-- Interactive Flashcard Widget -->
+                <div class="flashcard-box" id="flashcard-box">
+                  <div class="card-question-area">
+                    <span class="card-module-tag">CS4102 • DISTRIBUTED SYSTEMS</span>
+                    <h4 class="card-q">What is the core distinction between Paxos and Raft consensus algorithms?</h4>
+                    <div class="card-answer-revealed" id="card-answer">
+                      <p><strong>Answer:</strong> Raft decomposes consensus into <em>Leader Election</em>, <em>Log Replication</em>, and <em>Safety</em>, enforcing strong leader dominance to maximize human understandability. Paxos is symmetric and permits multi-proposer coordination without a singular leader invariant.</p>
+                      <div class="math-stats">
+                        <span>Current Stability (S): <strong id="fsrs-stability">3.2 days</strong></span>
+                        <span>Retrievability (R): <strong id="fsrs-retrievability">92.4%</strong></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card-actions" id="card-action-btns">
+                    <button class="btn btn-reveal" id="btn-reveal-answer" onclick="revealCardAnswer()">Reveal Answer & Calculate Intervals</button>
+                    <div class="fsrs-grade-buttons" id="fsrs-grade-buttons" style="display: none;">
+                      <button class="grade-btn grade-again" onclick="gradeFSRS('again')">
+                        <span class="grade-name">Again</span>
+                        <span class="grade-interval">10m</span>
+                      </button>
+                      <button class="grade-btn grade-hard" onclick="gradeFSRS('hard')">
+                        <span class="grade-name">Hard</span>
+                        <span class="grade-interval">1.4d</span>
+                      </button>
+                      <button class="grade-btn grade-good" onclick="gradeFSRS('good')">
+                        <span class="grade-name">Good</span>
+                        <span class="grade-interval">3.8d</span>
+                      </button>
+                      <button class="grade-btn grade-easy" onclick="gradeFSRS('easy')">
+                        <span class="grade-name">Easy</span>
+                        <span class="grade-interval">7.5d</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: What-If GPA Modeler -->
+              <div class="panel-right">
+                <div class="gpa-modeler-card">
+                  <div class="gpa-header">
+                    <span class="gpa-title">What-If CGPA Sensitivity Modeler</span>
+                    <span class="gpa-score" id="gpa-display">3.88 CGPA</span>
+                  </div>
+                  <p class="gpa-subtitle">Adjust anticipated credit units and target grades to forecast graduation honors.</p>
+
+                  <div class="gpa-sliders">
+                    <div class="slider-group">
+                      <div class="slider-label-row">
+                        <span>Current Credits Completed</span>
+                        <span class="font-mono" id="credits-val">84 Credits</span>
+                      </div>
+                      <input type="range" min="30" max="120" value="84" class="slider" id="input-credits" oninput="recalcGPA()" />
+                    </div>
+
+                    <div class="slider-group">
+                      <div class="slider-label-row">
+                        <span>Upcoming Semester Target GPA</span>
+                        <span class="font-mono" id="sem-gpa-val">4.00</span>
+                      </div>
+                      <input type="range" min="2.00" max="4.00" step="0.05" value="4.00" class="slider" id="input-sem-gpa" oninput="recalcGPA()" />
+                    </div>
+                  </div>
+
+                  <div class="gpa-result-box">
+                    <div class="result-label">Forecasted Cumulative CGPA:</div>
+                    <div class="result-number text-indigo" id="final-gpa-val">3.90</div>
+                    <div class="result-badge">First Class Honors Guaranteed</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Finance Interactive Panel -->
+          <div class="sandbox-panel" id="sandbox-panel-finance">
+            <div class="panel-grid">
+              <div class="panel-left">
+                <div class="panel-title-row">
+                  <h3 class="panel-title">Arbitrary-Precision Financial Math & Statement Deduplication</h3>
+                  <span class="badge-cyan">BCMath & WebCrypto</span>
+                </div>
+                <p class="panel-desc">
+                  Standard IEEE 754 floating points cause severe rounding errors (e.g. <code>0.1 + 0.2 !== 0.3</code>). NextOmni Finance uses <code>NUMERIC(15,4)</code> BCMath precision and SHA-256 statement hashes.
+                </p>
+
+                <!-- Floating Point vs BCMath Demo -->
+                <div class="precision-demo-box">
+                  <div class="demo-comparison-grid">
+                    <div class="comparison-card comp-bad">
+                      <div class="comp-badge text-red">Standard IEEE 754 Float</div>
+                      <div class="comp-math font-mono">0.1 + 0.2 = 0.30000000000000004</div>
+                      <div class="comp-status text-red">❌ Ledger Drift Hazard</div>
+                    </div>
+                    <div class="comparison-card comp-good">
+                      <div class="comp-badge text-cyan">NextOmni BCMath NUMERIC(15,4)</div>
+                      <div class="comp-math font-mono">bcadd("0.1", "0.2", 4) = "0.3000"</div>
+                      <div class="comp-status text-emerald">✓ Zero Precision Drift</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Instant SHA-256 Hash Deduplicator -->
+                <div class="hash-dedup-box">
+                  <div class="hash-header">
+                    <span class="hash-title">Live Bank Statement SHA-256 Hash Ingestion</span>
+                    <span class="hash-engine font-mono">crypto.subtle</span>
+                  </div>
+                  <div class="input-row">
+                    <input type="text" id="statement-input" class="statement-input" value="Maybank2u_TXN_20261014_RM450.00_RELOAD" oninput="computeStatementHash()" />
+                  </div>
+                  <div class="hash-result-row">
+                    <span class="hash-label">SHA-256 Digest:</span>
+                    <span class="hash-hex font-mono" id="statement-hash-hex">Computing digest...</span>
+                  </div>
+                  <div class="dedup-status">
+                    <span class="status-indicator-dot"></span>
+                    <span id="dedup-status-text">Idempotent Key Generated • Deduplication Check: Unique (Pass)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Net Worth Breakdown -->
+              <div class="panel-right">
+                <div class="finance-breakdown-card">
+                  <div class="fb-header">
+                    <span class="fb-title">Multi-Account Balance Aggregator</span>
+                    <span class="fb-total font-mono text-cyan">RM 36,121.45</span>
+                  </div>
+
+                  <div class="fb-accounts-list">
+                    <div class="fb-account-item">
+                      <div class="acc-info">
+                        <span class="acc-name">Maybank Islamic Savings</span>
+                        <span class="acc-type">Primary Liquid Float</span>
+                      </div>
+                      <span class="acc-bal font-mono">RM 14,850.20</span>
+                    </div>
+
+                    <div class="fb-account-item">
+                      <div class="acc-info">
+                        <span class="acc-name">CIMB High Yield Account</span>
+                        <span class="acc-type">Emergency 6-Month Reserve</span>
+                      </div>
+                      <span class="acc-bal font-mono">RM 16,500.00</span>
+                    </div>
+
+                    <div class="fb-account-item">
+                      <div class="acc-info">
+                        <span class="acc-name">Touch 'n Go eWallet & GrabPay</span>
+                        <span class="acc-type">Micro-Transit & Daily Transit</span>
+                      </div>
+                      <span class="acc-bal font-mono">RM 4,771.25</span>
+                    </div>
+                  </div>
+
+                  <div class="fb-footer">
+                    <span>Ledger UUIDv7: <code>0192e4ab-8a3b-7f21-998b-fe9a81cd2900</code></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Intelligence Interactive Panel -->
+          <div class="sandbox-panel" id="sandbox-panel-intelligence">
+            <div class="panel-grid">
+              <div class="panel-left">
+                <div class="panel-title-row">
+                  <h3 class="panel-title">7-Day Burnout Risk Classifier (GBM Model)</h3>
+                  <span class="badge-amber">Applied Machine Learning</span>
+                </div>
+                <p class="panel-desc">
+                  NextOmni Intelligence trains a Gradient Boosting Classifier on telemetry logs to detect early chronic fatigue and trigger automated deload warnings before performance drops.
+                </p>
+
+                <!-- Interactive Feature Sliders -->
+                <div class="ml-sliders-box">
+                  <div class="slider-group">
+                    <div class="slider-label-row">
+                      <span>Daily Study / Deep Work Hours</span>
+                      <span class="font-mono text-cyan" id="ml-study-val">7.5 hrs</span>
+                    </div>
+                    <input type="range" min="2" max="14" step="0.5" value="7.5" class="slider" id="input-ml-study" oninput="predictBurnout()" />
+                  </div>
+
+                  <div class="slider-group">
+                    <div class="slider-label-row">
+                      <span>Average Nightly Sleep Duration</span>
+                      <span class="font-mono text-emerald" id="ml-sleep-val">7.2 hrs</span>
+                    </div>
+                    <input type="range" min="4" max="10" step="0.2" value="7.2" class="slider" id="input-ml-sleep" oninput="predictBurnout()" />
+                  </div>
+
+                  <div class="slider-group">
+                    <div class="slider-label-row">
+                      <span>Late Evening Screen Time (Post 10 PM)</span>
+                      <span class="font-mono text-amber" id="ml-screen-val">1.0 hrs</span>
+                    </div>
+                    <input type="range" min="0" max="4" step="0.5" value="1.0" class="slider" id="input-ml-screen" oninput="predictBurnout()" />
+                  </div>
+
+                  <div class="slider-group">
+                    <div class="slider-label-row">
+                      <span>Habit Execution Consistency Score</span>
+                      <span class="font-mono text-indigo" id="ml-habit-val">90%</span>
+                    </div>
+                    <input type="range" min="20" max="100" step="5" value="90" class="slider" id="input-ml-habit" oninput="predictBurnout()" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Model Prediction Output -->
+              <div class="panel-right">
+                <div class="burnout-result-card">
+                  <div class="br-header">
+                    <span class="br-title">Model Inference Engine</span>
+                    <span class="br-version font-mono">v1.4 Scikit-GBM</span>
+                  </div>
+
+                  <div class="risk-gauge-container">
+                    <div class="gauge-meter-wrapper">
+                      <div class="gauge-meter" id="gauge-meter-fill"></div>
+                      <div class="gauge-center">
+                        <span class="gauge-percent" id="burnout-percent">18.4%</span>
+                        <span class="gauge-label">Burnout Probability</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="risk-state-box" id="risk-state-box">
+                    <div class="risk-status-line">
+                      <span class="status-indicator-dot" id="risk-dot"></span>
+                      <strong id="risk-status-text">Low Burnout Risk (Safe)</strong>
+                    </div>
+                    <p class="risk-recommendation" id="risk-recommendation-text">
+                      Optimal cognitive equilibrium detected. Maintain current 90-minute ultradian study blocks and current sleep schedule.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 100% Free Tier Production Cloud Runbook Section -->
+    <section class="section runbook-section" id="runbook">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <div class="section-eyebrow justify-center">
+            <span class="eyebrow-dot"></span>
+            <span>PRODUCTION ENGINEERING RUNBOOK</span>
+          </div>
+          <h2 class="section-title">100% Free-Tier Production Cloud ($0/mo Forever)</h2>
+          <p class="section-desc max-w-2xl mx-auto">
+            Zero hosting overhead engineered through edge compute, managed container pooling, and serverless architectures with verified zero idle fees.
+          </p>
+        </div>
+
+        <div class="runbook-grid">
+          <!-- Tier 1 -->
+          <div class="runbook-card">
+            <div class="runbook-num">01</div>
+            <div class="runbook-title">Frontend Edge Delivery</div>
+            <div class="runbook-provider">Vercel Hobby & Netlify Edge</div>
+            <p class="runbook-body">
+              Global CDN edge node distribution with automated continuous integration, automatic SSL termination, and zero-downtime previews on Git branch pushes.
+            </p>
+            <div class="runbook-cost font-mono">$0.00 / month</div>
+          </div>
+
+          <!-- Tier 2 -->
+          <div class="runbook-card">
+            <div class="runbook-num">02</div>
+            <div class="runbook-title">Backend Container Compute</div>
+            <div class="runbook-provider">Render / Koyeb / Fly.io</div>
+            <p class="runbook-body">
+              512MB RAM lightweight microservices running Zend OPcache byte-code compilation for Laravel 11 and Uvicorn asynchronous workers for FastAPI Python 3.14.
+            </p>
+            <div class="runbook-cost font-mono">$0.00 / month</div>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="runbook-card">
+            <div class="runbook-num">03</div>
+            <div class="runbook-title">Managed Persistence Layer</div>
+            <div class="runbook-provider">Supabase & Neon PostgreSQL 16</div>
+            <p class="runbook-body">
+              High-throughput relational databases with PgBouncer connection pooling on port 6543, cold-start mitigation, and automated daily WAL archiving.
+            </p>
+            <div class="runbook-cost font-mono">$0.00 / month</div>
+          </div>
+
+          <!-- Tier 4 -->
+          <div class="runbook-card">
+            <div class="runbook-num">04</div>
+            <div class="runbook-title">Asynchronous Queue & Cache</div>
+            <div class="runbook-provider">Database-Backed Driver</div>
+            <p class="runbook-body">
+              Eliminated expensive dedicated Redis instances by leveraging PostgreSQL native table locking and atomic row updates for queue workers and cache keys.
+            </p>
+            <div class="runbook-cost font-mono">$0.00 / month</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Master Ecosystem CLI Orchestration Section -->
+    <section class="section terminal-section" id="terminal">
+      <div class="section-container">
+        <div class="section-header text-center">
+          <div class="section-eyebrow justify-center">
+            <span class="eyebrow-dot"></span>
+            <span>DEVELOPER EXPERIENCE & ORCHESTRATION</span>
+          </div>
+          <h2 class="section-title">Ecosystem Master PowerShell CLI</h2>
+          <p class="section-desc max-w-2xl mx-auto">
+            Interactive simulation of <code>./run_ecosystem.ps1</code>. Click buttons or type commands to run test suites, check pillar health, or spin up local microservices.
+          </p>
+        </div>
+
+        <!-- Terminal Card -->
+        <div class="terminal-card">
+          <div class="terminal-bar">
+            <div class="terminal-dots">
+              <span class="t-dot t-red"></span>
+              <span class="t-dot t-yellow"></span>
+              <span class="t-dot t-green"></span>
+            </div>
+            <div class="terminal-title font-mono">pwsh — Ezra Lai@NextOmni: ~/nextomni/run_ecosystem.ps1</div>
+            <div class="terminal-actions">
+              <button class="t-btn-clear" onclick="clearTerminal()">Clear</button>
+            </div>
+          </div>
+
+          <!-- Terminal Output Area -->
+          <div class="terminal-screen font-mono" id="terminal-screen">
+            <div class="terminal-line banner-line">
++------------------------------------------------------------------------------+<br/>
+|                       NEXTOMNI ECOSYSTEM MASTER CLI                          |<br/>
+|     Flagship Personal Life, Financial, Academic & Intelligence OS            |<br/>
+|     Authored by Ezra Lai | 100% Free-Tier Production Cloud ($0/mo)           |<br/>
++------------------------------------------------------------------------------+
+            </div>
+            <div class="terminal-line info-line">[+] NextOmni Ecosystem Ready. Type a command or click quick action buttons below.</div>
+          </div>
+
+          <!-- Interactive CLI Control Buttons -->
+          <div class="terminal-controls">
+            <span class="controls-label">Quick Commands:</span>
+            <button class="cli-btn" onclick="executeCLICommand('status')">.\run_ecosystem.ps1 -Status</button>
+            <button class="cli-btn" onclick="executeCLICommand('test-all')">.\run_ecosystem.ps1 -TestAll</button>
+            <button class="cli-btn" onclick="executeCLICommand('verify-all')">.\run_ecosystem.ps1 -VerifyAll</button>
+            <button class="cli-btn" onclick="executeCLICommand('serve-life')">.\run_ecosystem.ps1 -ServeLife</button>
+            <button class="cli-btn" onclick="executeCLICommand('serve-study')">.\run_ecosystem.ps1 -ServeStudy</button>
+            <button class="cli-btn" onclick="executeCLICommand('serve-intel')">.\run_ecosystem.ps1 -ServeIntelligence</button>
+          </div>
+
+          <!-- Terminal Input Row -->
+          <form class="terminal-input-row" onsubmit="handleTerminalSubmit(event)">
+            <span class="prompt-symbol font-mono">PS C:\ezra-projects\nextomni&gt;</span>
+            <input type="text" id="terminal-input" class="terminal-input font-mono" placeholder="Type status, test, serve, help..." autocomplete="off" />
+            <button type="submit" class="terminal-submit-btn">Run</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-emblem-small">
+            <svg viewBox="0 0 32 32" fill="none" class="emblem-svg">
+              <polygon points="16,6 25,12 25,22 16,28 7,22 7,12" stroke="#06b6d4" stroke-width="2" fill="none"/>
+              <circle cx="16" cy="16" r="3" fill="#10b981"/>
+            </svg>
+          </div>
+          <div>
+            <div class="footer-logo-title">NEXT<span class="accent-text">OMNI</span></div>
+            <div class="footer-logo-sub">Master Personal Operating System</div>
+          </div>
+        </div>
+
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <span class="col-title">The 4 Pillars</span>
+            <a href="#module-life">NextOmni Life (:3000)</a>
+            <a href="#module-study">NextOmni Study (:3001)</a>
+            <a href="#module-finance">NextOmni Finance (Vercel)</a>
+            <a href="#module-intelligence">NextOmni Intelligence (:8000)</a>
+          </div>
+
+          <div class="footer-col">
+            <span class="col-title">Architecture</span>
+            <a href="#architecture">Cross-Module Data Flow</a>
+            <a href="#runbook">Zero-Cost Cloud Runbook</a>
+            <a href="#sandbox">Recruiter Test Sandbox</a>
+            <a href="#terminal">PowerShell Master CLI</a>
+          </div>
+
+          <div class="footer-col">
+            <span class="col-title">Author & Engineering</span>
+            <a href="https://github.com/ezralai" target="_blank" rel="noopener noreferrer">GitHub / Ezra Lai</a>
+            <a href="https://nextomni-finance.onrender.com/docs" target="_blank" rel="noopener noreferrer">Scalar API Live</a>
+            <a href="http://localhost:3001/api/v1/openapi.json" target="_blank" rel="noopener noreferrer">Study OpenAPI Spec</a>
+            <span class="col-meta">License: MIT • 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="author-attribution">
+          Authored & Architected by <strong class="text-white">Ezra Lai</strong> | Principal Systems Architect & Cognitive Engineer
+        </div>
+        <div class="footer-tech-meta font-mono">
+          <span>Next.js 15 • Laravel 11 • FastAPI • PostgreSQL 16 • FSRS-4.5</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
