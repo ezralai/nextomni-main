@@ -6,8 +6,9 @@
   "author": "Ezra Lai",
   "license": "MIT",
   "scripts": {
-    "dev": "python -m http.server 5000",
-    "start": "python -m http.server 5000",
+    "dev": "node serve.js 5000",
+    "start": "node serve.js 5000",
+    "serve": "node serve.js 5000",
     "status": "powershell -File ./run_ecosystem.ps1 -Status",
     "test:all": "powershell -File ./run_ecosystem.ps1 -TestAll",
     "verify:all": "powershell -File ./run_ecosystem.ps1 -VerifyAll",

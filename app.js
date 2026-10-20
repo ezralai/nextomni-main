@@ -1,10 +1,55 @@
 /**
- * NextOmni Ecosystem Master Landing Page Client Logic
+ * NextOmni Ecosystem Master Landing Page Client Logic (UX Enhanced Edition)
  * Author: Ezra Lai | Principal Systems Architect & Cognitive Engineer
  */
 
 // ==============================================================================
-// 1. Interactive Ambient Neural Canvas
+// 1. Toast Notification System
+// ==============================================================================
+function showToast(message, icon = '✦') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-item';
+  toast.innerHTML = `
+    <span class="toast-icon">${icon}</span>
+    <span class="toast-msg">${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(20px)';
+    toast.style.transition = 'all 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 3200);
+}
+
+function copyLaunchCommand(cmdKey) {
+  const commands = {
+    'serve-life': 'powershell -File ./run_ecosystem.ps1 -ServeLife',
+    'serve-study': 'powershell -File ./run_ecosystem.ps1 -ServeStudy',
+    'serve-intel': 'powershell -File ./run_ecosystem.ps1 -ServeIntelligence',
+    'serve-landing': 'powershell -File ./run_ecosystem.ps1 -ServeLanding',
+    'test-all': 'powershell -File ./run_ecosystem.ps1 -TestAll'
+  };
+
+  const text = commands[cmdKey] || `powershell -File ./run_ecosystem.ps1 -${cmdKey}`;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`Copied command: "${text}"`, '📋');
+  }).catch(() => {
+    showToast(`Run: ${text}`, 'ℹ️');
+  });
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==============================================================================
+// 2. Interactive Ambient Neural Canvas
 // ==============================================================================
 (function initNeuralCanvas() {
   const canvas = document.getElementById('neural-canvas');
@@ -100,36 +145,99 @@
 })();
 
 // ==============================================================================
-// 2. Procedural 40Hz Binaural Beats Web Audio Synthesis
+// 3. Procedural Binaural Beats Web Audio Synthesis with Oscilloscope
 // ==============================================================================
 let audioCtx = null;
 let oscLeft = null;
 let oscRight = null;
 let gainNode = null;
 let isAudioPlaying = false;
+let currentBinauralBeat = 40; // Default 40Hz Gamma Focus
+let animFrameId = null;
+
+function setBinauralBeat(beatFreq, modeName) {
+  currentBinauralBeat = beatFreq;
+  const pills = document.querySelectorAll('.freq-pill');
+  pills.forEach(p => p.classList.remove('active'));
+
+  event?.target?.classList.add('active');
+
+  const modeEl = document.getElementById('current-audio-mode');
+  if (modeEl) modeEl.textContent = `Current: ${modeName} (Active)`;
+
+  if (isAudioPlaying && oscRight && audioCtx) {
+    oscRight.frequency.setValueAtTime(200 + currentBinauralBeat, audioCtx.currentTime);
+  }
+
+  showToast(`Acoustic Priming switched to ${modeName}`, '🎧');
+}
+
+function drawOscilloscope() {
+  const canvas = document.getElementById('audio-oscilloscope');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  let phase = 0;
+  function animate() {
+    if (!isAudioPlaying) {
+      ctx.clearRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+      return;
+    }
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.lineWidth = 1.5;
+
+    // Draw Left Wave (200Hz proxy)
+    ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+    ctx.beginPath();
+    for (let x = 0; x < w; x++) {
+      const y = h / 2 + Math.sin(x * 0.08 + phase) * 12;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Draw Interference Gamma Beat Wave
+    ctx.strokeStyle = '#06b6d4';
+    ctx.beginPath();
+    for (let x = 0; x < w; x++) {
+      const envelope = Math.cos(x * 0.02 + phase * 0.5);
+      const carrier = Math.sin(x * 0.08 + phase);
+      const y = h / 2 + (carrier * envelope) * 18;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    phase += 0.08;
+    animFrameId = requestAnimationFrame(animate);
+  }
+  animate();
+}
 
 function toggleSoundscape() {
   const topBtn = document.getElementById('soundscape-btn');
+  const dockBtn = document.getElementById('dock-soundscape-btn');
   const sandboxBtnText = document.getElementById('sandbox-audio-text');
 
   if (!isAudioPlaying) {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!audioCtx) {
-        audioCtx = new AudioContext();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
 
-      // Base Carrier 200Hz on Left, 240Hz on Right = 40Hz Gamma Differential
       const baseFreq = 200;
-      const binauralBeat = 40;
-
       const merger = audioCtx.createChannelMerger(2);
       gainNode = audioCtx.createGain();
       gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 1.2);
+      gainNode.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 1.0);
 
       oscLeft = audioCtx.createOscillator();
       oscLeft.type = 'sine';
@@ -137,10 +245,10 @@ function toggleSoundscape() {
 
       oscRight = audioCtx.createOscillator();
       oscRight.type = 'sine';
-      oscRight.frequency.setValueAtTime(baseFreq + binauralBeat, audioCtx.currentTime);
+      oscRight.frequency.setValueAtTime(baseFreq + currentBinauralBeat, audioCtx.currentTime);
 
-      oscLeft.connect(merger, 0, 0);   // Left channel
-      oscRight.connect(merger, 0, 1);  // Right channel
+      oscLeft.connect(merger, 0, 0);
+      oscRight.connect(merger, 0, 1);
       merger.connect(gainNode);
       gainNode.connect(audioCtx.destination);
 
@@ -149,7 +257,11 @@ function toggleSoundscape() {
       isAudioPlaying = true;
 
       if (topBtn) topBtn.classList.add('active');
-      if (sandboxBtnText) sandboxBtnText.textContent = 'Pause 40Hz Gamma Soundscape';
+      if (dockBtn) dockBtn.classList.add('active');
+      if (sandboxBtnText) sandboxBtnText.textContent = `Pause ${currentBinauralBeat}Hz Soundscape`;
+
+      drawOscilloscope();
+      showToast(`${currentBinauralBeat}Hz Binaural Soundscape Active`, '🎧');
     } catch (e) {
       console.warn('Web Audio initialization error:', e);
     }
@@ -163,7 +275,10 @@ function toggleSoundscape() {
         } catch (e) {}
         isAudioPlaying = false;
         if (topBtn) topBtn.classList.remove('active');
-        if (sandboxBtnText) sandboxBtnText.textContent = 'Play 40Hz Gamma Soundscape';
+        if (dockBtn) dockBtn.classList.remove('active');
+        if (sandboxBtnText) sandboxBtnText.textContent = `Play ${currentBinauralBeat}Hz Soundscape`;
+        drawOscilloscope();
+        showToast('Soundscape Paused', '⏸');
       }, 500);
     }
   }
@@ -172,16 +287,278 @@ function toggleSoundscape() {
 document.getElementById('soundscape-btn')?.addEventListener('click', toggleSoundscape);
 
 // ==============================================================================
-// 3. Navbar Scroll Elevation & Mobile Menu Toggle
+// 4. Command Palette (Ctrl+K / ⌘K)
+// ==============================================================================
+const cpActions = [
+  { id: 'tour', title: 'Start Guided Recruiter Tour', category: 'Recruiter Experience', icon: '🧭', action: () => startRecruiterTour() },
+  { id: 'life', title: 'Jump to NextOmni Life (Port 3000)', category: 'Pillars', icon: '🌿', action: () => { window.location.hash = '#module-life'; launchSandboxTab('life'); } },
+  { id: 'study', title: 'Jump to NextOmni Study (Port 3001)', category: 'Pillars', icon: '🎓', action: () => { window.location.hash = '#module-study'; launchSandboxTab('study'); } },
+  { id: 'finance', title: 'Jump to NextOmni Finance (Vercel & Render)', category: 'Pillars', icon: '💳', action: () => { window.location.hash = '#module-finance'; launchSandboxTab('finance'); } },
+  { id: 'intelligence', title: 'Jump to NextOmni Intelligence (Port 8000)', category: 'Pillars', icon: '🧠', action: () => { window.location.hash = '#module-intelligence'; launchSandboxTab('intelligence'); } },
+  { id: 'sound', title: 'Toggle 40Hz Gamma Focus Binaural Beats', category: 'Audio Focus', icon: '🎧', action: () => toggleSoundscape() },
+  { id: 'status', title: 'Check Ecosystem Health & CLI Status', category: 'Developer Tools', icon: '⚡', action: () => { window.location.hash = '#terminal'; executeCLICommand('status'); } },
+  { id: 'test', title: 'Run Multi-Module Verified Test Suite', category: 'Developer Tools', icon: '🧪', action: () => { window.location.hash = '#terminal'; executeCLICommand('test-all'); } },
+  { id: 'health', title: 'Open Microservice Connectivity Inspector', category: 'DevOps', icon: '📡', action: () => openHealthModal() },
+  { id: 'arch', title: 'Explore Master Topology & ACID Telemetry', category: 'Architecture', icon: '🏛️', action: () => { window.location.hash = '#architecture'; } },
+  { id: 'runbook', title: 'View 100% Free-Tier Cloud Runbook ($0/mo)', category: 'Architecture', icon: '☁️', action: () => { window.location.hash = '#runbook'; } },
+  { id: 'github', title: 'Open Ezra Lai GitHub Portfolio', category: 'Author Profile', icon: '↗', action: () => window.open('https://github.com/ezralai', '_blank') }
+];
+
+let selectedCpIndex = 0;
+
+function openCommandPalette() {
+  const backdrop = document.getElementById('command-palette-backdrop');
+  const input = document.getElementById('cp-input');
+  if (backdrop) {
+    backdrop.classList.add('active');
+    filterCommandPalette('');
+    setTimeout(() => input?.focus(), 50);
+  }
+}
+
+function closeCommandPalette() {
+  const backdrop = document.getElementById('command-palette-backdrop');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+function filterCommandPalette(query) {
+  query = (query || '').toLowerCase().trim();
+  const listEl = document.getElementById('cp-results-list');
+  if (!listEl) return;
+
+  const matches = cpActions.filter(a => 
+    a.title.toLowerCase().includes(query) || 
+    a.category.toLowerCase().includes(query)
+  );
+
+  selectedCpIndex = 0;
+  if (matches.length === 0) {
+    listEl.innerHTML = `<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 13px;">No actions matching "${query}"</div>`;
+    return;
+  }
+
+  listEl.innerHTML = matches.map((m, idx) => `
+    <div class="cp-item ${idx === 0 ? 'selected' : ''}" data-idx="${idx}" onclick="executeCpAction(${idx})">
+      <div class="cp-item-left">
+        <span class="cp-item-icon">${m.icon}</span>
+        <span>${m.title}</span>
+      </div>
+      <span class="cp-item-badge">${m.category}</span>
+    </div>
+  `).join('');
+}
+
+function executeCpAction(idx) {
+  const input = document.getElementById('cp-input')?.value.toLowerCase().trim() || '';
+  const matches = cpActions.filter(a => a.title.toLowerCase().includes(input) || a.category.toLowerCase().includes(input));
+  const target = matches[idx] || matches[0];
+  if (target) {
+    closeCommandPalette();
+    target.action();
+  }
+}
+
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const backdrop = document.getElementById('command-palette-backdrop');
+    if (backdrop?.classList.contains('active')) closeCommandPalette();
+    else openCommandPalette();
+  } else if (e.key === 'Escape') {
+    closeCommandPalette();
+    closeHealthModal();
+    endRecruiterTour();
+  } else if (document.getElementById('command-palette-backdrop')?.classList.contains('active')) {
+    const items = document.querySelectorAll('.cp-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedCpIndex = (selectedCpIndex + 1) % items.length;
+      items.forEach((it, i) => it.classList.toggle('selected', i === selectedCpIndex));
+      items[selectedCpIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedCpIndex = (selectedCpIndex - 1 + items.length) % items.length;
+      items.forEach((it, i) => it.classList.toggle('selected', i === selectedCpIndex));
+      items[selectedCpIndex]?.scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      executeCpAction(selectedCpIndex);
+    }
+  }
+});
+
+// ==============================================================================
+// 5. 1-Click Guided Recruiter Tour System
+// ==============================================================================
+const tourSteps = [
+  {
+    target: '#hero',
+    title: 'Welcome to NextOmni Core',
+    body: 'NextOmni is a distributed personal operating system authored by Ezra Lai. Built for senior engineering scrutiny with 100% free-tier cloud deployment ($0/mo forever) and real ACID telemetry.'
+  },
+  {
+    target: '#modules',
+    title: 'The Four Sovereign Pillars',
+    body: 'The ecosystem spans 4 domains: NextOmni Life (Circadian), NextOmni Study (FSRS-4.5), NextOmni Finance (BCMath), and NextOmni Intelligence (Causal ML). Each runs independently with verified test suites.'
+  },
+  {
+    target: '#architecture',
+    title: 'Master Topology & Dataflow',
+    body: 'Click any node in this diagram to inspect its compute profile, database isolation guarantees, or how telemetry streams from Study and Life into the Intelligence Feature Store.'
+  },
+  {
+    target: '#sandbox',
+    title: 'Interactive Recruiter Lab',
+    body: 'Test drive the core algorithms live! Grade FSRS memory intervals, calculate arbitrary-precision financial BCMath splits, check live Huberman circadian clocks, and test the 7-day burnout ML classifier.'
+  },
+  {
+    target: '#terminal',
+    title: 'Ecosystem Master PowerShell CLI',
+    body: 'Try typing commands or clicking the quick action buttons to verify test assertions across all repositories directly in this browser terminal emulator.'
+  }
+];
+
+let currentTourStep = 0;
+
+function startRecruiterTour() {
+  currentTourStep = 0;
+  showTourStep(currentTourStep);
+  showToast('Guided Recruiter Tour Started', '🧭');
+}
+
+function showTourStep(idx) {
+  const card = document.getElementById('tour-card');
+  if (!card) return;
+
+  const step = tourSteps[idx];
+  document.getElementById('tour-step-badge').textContent = `Step ${idx + 1} of ${tourSteps.length}`;
+  document.getElementById('tour-title').textContent = step.title;
+  document.getElementById('tour-body').textContent = step.body;
+
+  const prevBtn = document.getElementById('tour-prev-btn');
+  const nextBtn = document.getElementById('tour-next-btn');
+
+  if (prevBtn) prevBtn.style.visibility = idx === 0 ? 'hidden' : 'visible';
+  if (nextBtn) nextBtn.textContent = idx === tourSteps.length - 1 ? 'Finish Tour' : 'Next →';
+
+  // Update dots
+  const dots = document.querySelectorAll('.t-dot-step');
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+  card.style.display = 'block';
+
+  const targetEl = document.querySelector(step.target);
+  if (targetEl) {
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('.tour-highlighted').forEach(el => el.classList.remove('tour-highlighted'));
+    targetEl.classList.add('tour-highlighted');
+  }
+}
+
+function nextTourStep() {
+  if (currentTourStep < tourSteps.length - 1) {
+    currentTourStep++;
+    showTourStep(currentTourStep);
+  } else {
+    endRecruiterTour();
+    showToast('Tour Completed! Enjoy exploring NextOmni.', '🎉');
+  }
+}
+
+function prevTourStep() {
+  if (currentTourStep > 0) {
+    currentTourStep--;
+    showTourStep(currentTourStep);
+  }
+}
+
+function endRecruiterTour() {
+  const card = document.getElementById('tour-card');
+  if (card) card.style.display = 'none';
+  document.querySelectorAll('.tour-highlighted').forEach(el => el.classList.remove('tour-highlighted'));
+}
+
+// ==============================================================================
+// 6. Microservice Health Inspector Modal & Live Ping Checks
+// ==============================================================================
+function openHealthModal() {
+  const backdrop = document.getElementById('health-modal-backdrop');
+  if (backdrop) {
+    backdrop.classList.add('active');
+    checkAllMicroservices();
+  }
+}
+
+function closeHealthModal() {
+  const backdrop = document.getElementById('health-modal-backdrop');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+async function checkAllMicroservices() {
+  pingService('life');
+  pingService('study');
+  pingService('finance');
+  pingService('intelligence');
+}
+
+async function pingService(serviceKey) {
+  const statusTexts = {
+    'life': document.getElementById('status-text-life'),
+    'study': document.getElementById('status-text-study'),
+    'finance': document.getElementById('status-text-finance'),
+    'intelligence': document.getElementById('status-text-intelligence')
+  };
+
+  const hmItem = document.getElementById(`hm-${serviceKey}`);
+  const hmBadge = hmItem ? hmItem.querySelector('.hm-badge') : null;
+
+  if (statusTexts[serviceKey]) statusTexts[serviceKey].textContent = 'Pinging...';
+  if (hmBadge) {
+    hmBadge.className = 'hm-badge badge-checking';
+    hmBadge.textContent = 'Checking...';
+  }
+
+  // Microservice endpoints mapping
+  const endpoints = {
+    'life': 'http://localhost:3000',
+    'study': 'http://localhost:3001',
+    'finance': 'https://nextomni-finance.vercel.app',
+    'intelligence': 'http://localhost:8000/docs'
+  };
+
+  const url = endpoints[serviceKey];
+  const startTime = performance.now();
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const resp = await fetch(url, { mode: 'no-cors', signal: controller.signal });
+    clearTimeout(timeout);
+    const latency = Math.round(performance.now() - startTime);
+
+    if (statusTexts[serviceKey]) statusTexts[serviceKey].textContent = `Active (${latency}ms)`;
+    if (hmBadge) {
+      hmBadge.className = 'hm-badge badge-online';
+      hmBadge.textContent = `Online (${latency}ms)`;
+    }
+    showToast(`${serviceKey.toUpperCase()} service is Online (${latency}ms)`, '🟢');
+  } catch (err) {
+    if (statusTexts[serviceKey]) statusTexts[serviceKey].textContent = 'Offline (Click Boot)';
+    if (hmBadge) {
+      hmBadge.className = 'hm-badge badge-offline';
+      hmBadge.textContent = 'Offline';
+    }
+  }
+}
+
+// ==============================================================================
+// 7. Navbar Scroll Elevation & Mobile Menu Toggle
 // ==============================================================================
 window.addEventListener('scroll', () => {
   const navbar = document.getElementById('navbar');
   if (navbar) {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+    if (window.scrollY > 40) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
   }
 });
 
@@ -194,32 +571,22 @@ if (mobileToggle && navMenu) {
 }
 
 // ==============================================================================
-// 4. Sandbox Tab Switcher
+// 8. Sandbox Tab Switcher
 // ==============================================================================
 function launchSandboxTab(tabName) {
   const tabs = document.querySelectorAll('.sandbox-tab-btn');
   const panels = document.querySelectorAll('.sandbox-panel');
 
   tabs.forEach(btn => {
-    if (btn.dataset.tab === tabName) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
+    btn.classList.toggle('active', btn.dataset.tab === tabName);
   });
 
   panels.forEach(panel => {
-    if (panel.id === `sandbox-panel-${tabName}`) {
-      panel.classList.add('active');
-    } else {
-      panel.classList.remove('active');
-    }
+    panel.classList.toggle('active', panel.id === `sandbox-panel-${tabName}`);
   });
 
   const sandboxElem = document.getElementById('sandbox');
-  if (sandboxElem) {
-    sandboxElem.scrollIntoView({ behavior: 'smooth' });
-  }
+  if (sandboxElem) sandboxElem.scrollIntoView({ behavior: 'smooth' });
 }
 
 document.querySelectorAll('.sandbox-tab-btn').forEach(btn => {
@@ -229,8 +596,10 @@ document.querySelectorAll('.sandbox-tab-btn').forEach(btn => {
 });
 
 // ==============================================================================
-// 5. Pillar 1: Life Habit & Circadian Engine
+// 9. Pillar 1: Life Habit & Circadian Engine with Custom Habit Creator
 // ==============================================================================
+let isScrubbing = false;
+
 function toggleHabitSandbox(id) {
   const check = id === 3 ? document.getElementById('habit-check-3') : null;
   const badge = id === 3 ? document.getElementById('habit-badge-3') : null;
@@ -241,30 +610,73 @@ function toggleHabitSandbox(id) {
     check.classList.remove('active');
     check.textContent = '○';
     badge.textContent = '🔥 8d';
+    showToast('Habit unchecked for today', '○');
   } else {
     check.classList.add('active');
     check.textContent = '✓';
     badge.textContent = '🔥 9d';
+    showToast('Habit completed! Streak incremented to 9 days.', '🔥');
   }
 }
 
-function updateCircadianClock() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
+function addCustomHabit(e) {
+  e.preventDefault();
+  const input = document.getElementById('new-habit-input');
+  if (!input || !input.value.trim()) return;
 
+  const name = input.value.trim();
+  const container = document.getElementById('habits-container');
+
+  const newBox = document.createElement('div');
+  newBox.className = 'habit-item-box';
+  newBox.innerHTML = `
+    <button class="habit-checkbox active" onclick="this.classList.toggle('active'); this.textContent = this.classList.contains('active') ? '✓' : '○'">✓</button>
+    <div class="habit-details">
+      <span class="habit-name">${name}</span>
+      <span class="habit-sub">Custom tracking item • Active telemetry</span>
+    </div>
+    <span class="habit-streak-badge">🔥 1d</span>
+  `;
+
+  container.appendChild(newBox);
+  input.value = '';
+  showToast(`Custom habit "${name}" added!`, '✓');
+}
+
+function scrubCircadianTime(totalMinutes) {
+  isScrubbing = true;
+  totalMinutes = parseInt(totalMinutes, 10);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+  document.getElementById('scrubber-time-val').textContent = timeString;
+  updateCircadianStage(hours, minutes, 0, true);
+}
+
+function resetToRealTime() {
+  isScrubbing = false;
+  document.getElementById('scrubber-time-val').textContent = 'Live Clock';
+  updateCircadianClock();
+  showToast('Circadian clock synchronized with real solar time', '⏱');
+}
+
+function updateCircadianClock() {
+  if (isScrubbing) return;
+  const now = new Date();
+  updateCircadianStage(now.getHours(), now.getMinutes(), now.getSeconds(), false);
+}
+
+function updateCircadianStage(hours, minutes, seconds, isSimulated) {
   const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   const clockEl = document.getElementById('circadian-clock-time');
   if (clockEl) clockEl.textContent = timeString;
 
-  // Calculate 24-hr dial angle
   const totalMinutes = hours * 60 + minutes;
   const degrees = (totalMinutes / 1440) * 360;
   const hand = document.getElementById('dial-hand');
   if (hand) hand.style.transform = `rotate(${degrees}deg)`;
 
-  // Circadian stage mapping
   let phaseTitle = 'Optimal Phase';
   let phaseName = 'Daytime Focus';
   let phaseGuidance = 'Peak cognitive capacity.';
@@ -312,8 +724,64 @@ setInterval(updateCircadianClock, 1000);
 updateCircadianClock();
 
 // ==============================================================================
-// 6. Pillar 2: Study FSRS-4.5 Flashcard & What-If GPA Simulator
+// 10. Pillar 2: Study FSRS-4.5 Decks, Flashcard & Timetable Matrix Collision
 // ==============================================================================
+const studyDecks = [
+  {
+    tag: 'CS4102 • DISTRIBUTED SYSTEMS',
+    question: 'What is the core distinction between Paxos and Raft consensus algorithms?',
+    answer: 'Raft decomposes consensus into Leader Election, Log Replication, and Safety, enforcing strong leader dominance to maximize human understandability. Paxos is symmetric and permits multi-proposer coordination without a singular leader invariant.',
+    stability: '3.2 days',
+    retrievability: '92.4%',
+    difficulty: '4.8 / 10'
+  },
+  {
+    tag: 'AI3205 • MACHINE LEARNING',
+    question: 'Why does Multi-Head Attention scale quadratically O(N^2) with sequence length?',
+    answer: 'Standard Self-Attention computes dot products between all pairs of queries Q and keys K, yielding an N×N attention affinity matrix. For long context sequences, memory bandwidth and compute scale as N^2.',
+    stability: '5.1 days',
+    retrievability: '96.1%',
+    difficulty: '6.2 / 10'
+  },
+  {
+    tag: 'CS3203 • DATABASE INTERNALS',
+    question: 'How do Log-Structured Merge (LSM) trees achieve superior write throughput over B+ Trees?',
+    answer: 'LSM trees convert random disk writes into sequential append-only disk operations by buffering in an in-memory MemTable and flushing SSTables to disk in tiers, trading read amplification for maximized sequential write bandwidth.',
+    stability: '4.4 days',
+    retrievability: '94.0%',
+    difficulty: '5.4 / 10'
+  }
+];
+
+let currentDeckIdx = 0;
+
+function switchStudyDeck(idx) {
+  currentDeckIdx = idx;
+  const pills = document.querySelectorAll('.deck-pill');
+  pills.forEach((p, i) => p.classList.toggle('active', i === idx));
+
+  const deck = studyDecks[idx];
+  document.getElementById('card-deck-tag').textContent = deck.tag;
+  document.getElementById('card-q-text').textContent = deck.question;
+  document.getElementById('card-ans-text').innerHTML = `<strong>Answer:</strong> ${deck.answer}`;
+  document.getElementById('fsrs-stability').textContent = deck.stability;
+  document.getElementById('fsrs-retrievability').textContent = deck.retrievability;
+  document.getElementById('fsrs-difficulty').textContent = deck.difficulty;
+
+  const ans = document.getElementById('card-answer');
+  const revealBtn = document.getElementById('btn-reveal-answer');
+  const gradeBtns = document.getElementById('fsrs-grade-buttons');
+
+  if (ans) ans.classList.remove('active');
+  if (revealBtn) {
+    revealBtn.style.display = 'block';
+    revealBtn.textContent = 'Reveal Answer & Calculate Intervals';
+  }
+  if (gradeBtns) gradeBtns.style.display = 'none';
+
+  showToast(`Switched deck to ${deck.tag}`, '📚');
+}
+
 function revealCardAnswer() {
   const ans = document.getElementById('card-answer');
   const revealBtn = document.getElementById('btn-reveal-answer');
@@ -331,15 +799,19 @@ function gradeFSRS(grade) {
   if (grade === 'again') {
     if (stabilityEl) stabilityEl.textContent = '0.4 days';
     if (retrievabilityEl) retrievabilityEl.textContent = '65.0%';
+    showToast('FSRS-4.5: Resetting interval (Review in 10m)', '🔄');
   } else if (grade === 'hard') {
     if (stabilityEl) stabilityEl.textContent = '1.8 days';
     if (retrievabilityEl) retrievabilityEl.textContent = '84.2%';
+    showToast('FSRS-4.5: Interval scheduled for 1.4 days', '⚡');
   } else if (grade === 'good') {
     if (stabilityEl) stabilityEl.textContent = '4.5 days';
     if (retrievabilityEl) retrievabilityEl.textContent = '94.8%';
+    showToast('FSRS-4.5: Interval scheduled for 3.8 days', '✓');
   } else if (grade === 'easy') {
     if (stabilityEl) stabilityEl.textContent = '9.2 days';
     if (retrievabilityEl) retrievabilityEl.textContent = '98.5%';
+    showToast('FSRS-4.5: Interval scheduled for 7.5 days', '🚀');
   }
 
   const ans = document.getElementById('card-answer');
@@ -353,7 +825,31 @@ function gradeFSRS(grade) {
       revealBtn.textContent = 'Card Reviewed ✓ (Click to Reset)';
     }
     if (gradeBtns) gradeBtns.style.display = 'none';
-  }, 350);
+  }, 400);
+}
+
+let hasCollision = false;
+function toggleTimetableCollision() {
+  const slot = document.getElementById('tt-slot-wed');
+  const course = document.getElementById('tt-wed-course');
+  const statusLine = document.getElementById('tt-status-text');
+  const btn = document.getElementById('btn-toggle-collision');
+
+  if (!hasCollision) {
+    hasCollision = true;
+    slot?.classList.add('tt-slot-conflict');
+    if (course) course.textContent = '⚠️ CS3203 & AI3205 COLLISION!';
+    if (statusLine) statusLine.textContent = 'Matrix Warning: Classroom & Time Overlap Detected on Wednesday 11:00 AM';
+    if (btn) btn.textContent = 'Auto-Resolve Collision';
+    showToast('Timetable collision simulated on Wednesday!', '⚠️');
+  } else {
+    hasCollision = false;
+    slot?.classList.remove('tt-slot-conflict');
+    if (course) course.textContent = 'CS3203 Lecture (Resolved)';
+    if (statusLine) statusLine.textContent = 'Matrix Status: 0 Conflicts Detected • RFC 5545 iCalendar Sync Ready';
+    if (btn) btn.textContent = 'Simulate Schedule Collision';
+    showToast('Matrix conflict automatically resolved to Thursday slot', '✓');
+  }
 }
 
 function recalcGPA() {
@@ -363,22 +859,74 @@ function recalcGPA() {
   const creditsEl = document.getElementById('credits-val');
   const semGpaEl = document.getElementById('sem-gpa-val');
   const finalEl = document.getElementById('final-gpa-val');
+  const badgeEl = document.getElementById('gpa-honors-badge');
 
   if (creditsEl) creditsEl.textContent = `${credits} Credits`;
   if (semGpaEl) semGpaEl.textContent = semTarget.toFixed(2);
 
-  // Baseline 3.88 over current credits + 18 credits upcoming
   const upcomingCredits = 18;
-  const currentTotalGradePoints = 3.88 * credits;
-  const upcomingTotalGradePoints = semTarget * upcomingCredits;
-  const forecasted = (currentTotalGradePoints + upcomingTotalGradePoints) / (credits + upcomingCredits);
+  const currentTotal = 3.88 * credits;
+  const upcomingTotal = semTarget * upcomingCredits;
+  const forecasted = (currentTotal + upcomingTotal) / (credits + upcomingCredits);
 
   if (finalEl) finalEl.textContent = forecasted.toFixed(2);
+  if (badgeEl) {
+    if (forecasted >= 3.75) badgeEl.textContent = 'First Class Honors Guaranteed';
+    else if (forecasted >= 3.50) badgeEl.textContent = 'Second Class Upper Honors';
+    else badgeEl.textContent = 'Solid Standing';
+  }
 }
 
 // ==============================================================================
-// 7. Pillar 3: Finance BCMath & SHA-256 Digest Engine
+// 11. Pillar 3: Finance BCMath, Multi-Currency & SHA-256 Ingestion
 // ==============================================================================
+const currencyRates = {
+  'MYR': 1.0,
+  'USD': 0.224,
+  'SGD': 0.302,
+  'EUR': 0.211,
+  'GBP': 0.176
+};
+
+function switchCurrency(targetCurr) {
+  const pills = document.querySelectorAll('.curr-pill');
+  pills.forEach(p => p.classList.toggle('active', p.textContent === targetCurr));
+
+  const rate = currencyRates[targetCurr] || 1.0;
+  const totalMYR = 36121.45;
+  const b1MYR = 14850.20;
+  const b2MYR = 16500.00;
+  const b3MYR = 4771.25;
+
+  const sym = targetCurr === 'MYR' ? 'RM ' : (targetCurr === 'USD' ? '$' : (targetCurr === 'SGD' ? 'S$' : (targetCurr === 'EUR' ? '€' : '£')));
+
+  document.getElementById('fb-total-display').textContent = `${sym}${(totalMYR * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById('acc-bal-1').textContent = `${sym}${(b1MYR * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById('acc-bal-2').textContent = `${sym}${(b2MYR * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById('acc-bal-3').textContent = `${sym}${(b3MYR * rate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  showToast(`Currency view updated to ${targetCurr}`, '💱');
+}
+
+const sampleStatements = {
+  'maybank': 'Maybank2u_TXN_20261014_RM450.00_RELOAD_PETRONAS',
+  'cimb': 'CIMB_CLICKS_TXN_20261016_RM1200.00_SALARY_TRANSFER',
+  'tng': 'TNG_EWALLET_TXN_20261018_RM24.50_MRT_TRANSIT'
+};
+
+function loadSampleStatement(type) {
+  const pills = document.querySelectorAll('.statement-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  event?.target?.classList.add('active');
+
+  const input = document.getElementById('statement-input');
+  if (input && sampleStatements[type]) {
+    input.value = sampleStatements[type];
+    computeStatementHash();
+    showToast(`Loaded ${type.toUpperCase()} transaction payload`, '📄');
+  }
+}
+
 async function computeStatementHash() {
   const inputEl = document.getElementById('statement-input');
   const hashEl = document.getElementById('statement-hash-hex');
@@ -399,8 +947,36 @@ async function computeStatementHash() {
 computeStatementHash();
 
 // ==============================================================================
-// 8. Pillar 4: Intelligence 7-Day Burnout Risk Classifier
+// 12. Pillar 4: Intelligence Feature Store & Burnout ML Classifier
 // ==============================================================================
+const featureQueries = {
+  'focus': {
+    sql: 'SELECT session_id, duration_minutes, deep_work_ratio, fsrs_retention FROM focus_sessions WHERE date >= CURRENT_DATE - 7;',
+    summary: '✓ 14 Rows Ingested in 3.2ms • Real-time Stream Active'
+  },
+  'habits': {
+    sql: 'SELECT user_id, habit_id, streak_days, circadian_phase, completed_flag FROM habit_logs WHERE user_id = \'ezra\';',
+    summary: '✓ 4 Habit Stream Records Loaded • 100% ACID Integrity'
+  },
+  'anova': {
+    sql: 'SELECT factor_habit, factor_focus, p_value, f_statistic, causal_significance FROM anova_causal_results;',
+    summary: '✓ F=14.28, p < 0.001 (Statistically Significant Flow Link)'
+  }
+};
+
+function switchFeatureQuery(tab) {
+  const pills = document.querySelectorAll('.q-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  event?.target?.classList.add('active');
+
+  const data = featureQueries[tab];
+  if (data) {
+    document.getElementById('fsq-code-display').textContent = data.sql;
+    document.getElementById('fsq-result-summary').textContent = data.summary;
+    showToast(`Feature store query: ${tab}`, '🔍');
+  }
+}
+
 function predictBurnout() {
   const study = parseFloat(document.getElementById('input-ml-study')?.value || 7.5);
   const sleep = parseFloat(document.getElementById('input-ml-sleep')?.value || 7.2);
@@ -412,8 +988,6 @@ function predictBurnout() {
   document.getElementById('ml-screen-val').textContent = `${screen} hrs`;
   document.getElementById('ml-habit-val').textContent = `${habit}%`;
 
-  // Empirical GBM Risk Proxy Formulation:
-  // Base Risk + (Study Penalty) - (Sleep Protection) + (Late Screen Strain) - (Habit Resilience)
   let rawScore = 20;
   rawScore += (study - 6) * 6.5;
   rawScore -= (sleep - 6.5) * 11.0;
@@ -452,9 +1026,7 @@ function predictBurnout() {
     borderBox = 'rgba(245, 158, 11, 0.35)';
   }
 
-  if (gaugeFill) {
-    gaugeFill.style.background = `conic-gradient(${color} 0% ${risk}%, rgba(255, 255, 255, 0.08) ${risk}% 100%)`;
-  }
+  if (gaugeFill) gaugeFill.style.background = `conic-gradient(${color} 0% ${risk}%, rgba(255, 255, 255, 0.08) ${risk}% 100%)`;
   if (stateBox) {
     stateBox.style.background = bgBox;
     stateBox.style.borderColor = borderBox;
@@ -465,94 +1037,20 @@ function predictBurnout() {
   }
   if (dot) dot.style.background = color;
   if (recoText) recoText.textContent = reco;
+
+  // Update Cognitive Radar Points
+  const radar = document.getElementById('radar-poly');
+  if (radar) {
+    const focusVal = Math.max(15, Math.min(45, (study / 14) * 45));
+    const sleepVal = Math.max(55, Math.min(88, 50 + (sleep / 10) * 38));
+    const habitVal = Math.max(55, Math.min(88, 50 + (habit / 100) * 38));
+    const energyVal = Math.max(15, Math.min(45, 50 - (screen / 4) * 32));
+    radar.setAttribute('points', `50,${50 - focusVal} ${sleepVal},50 50,${habitVal} ${energyVal},50`);
+  }
 }
 
 // ==============================================================================
-// 9. Interactive Architecture Diagram Node Inspector
-// ==============================================================================
-const archNodesData = {
-  'edge-fin': {
-    title: 'NextOmni Finance Web (Nuxt 3 & Vue 3)',
-    desc: 'Frontend edge web surface deployed on Vercel Global Edge CDN. Communicates via authenticated REST and Bearer token headers to the Laravel 11 gateway.',
-    meta: ['Edge Cold Start: < 80ms', 'Framework: Nuxt 3.12 / Pinia', 'Hosting: Vercel Edge ($0/mo)']
-  },
-  'edge-life': {
-    title: 'NextOmni Life Web (Next.js 15 App Router)',
-    desc: 'PWA-ready reactive web client featuring 365-day SVG streaks, Web Audio 40Hz acoustic focus synthesis, and real-time circadian timeline rendering.',
-    meta: ['Framework: React 19 / Next.js 15', 'Port: localhost:3000', 'Cache: LocalStorage & Offline ServiceWorker']
-  },
-  'edge-study': {
-    title: 'NextOmni Study Web (FSRS Spaced Repetition)',
-    desc: 'Academic mastery client with real-time university timetable grid matrix, course syllabus AI decomposition, and sensitivity-modeled CGPA calculators.',
-    meta: ['Framework: Next.js 15 / Tailwind', 'Port: localhost:3001', 'Test Coverage: 22 Vitest Assertions Passing']
-  },
-  'gateway-fin': {
-    title: 'Finance REST API Gateway (Laravel 11 & PHP 8.3)',
-    desc: 'High-performance microservice executing BCMath arbitrary-precision arithmetic, non-custodial Malaysian bank statement parsers, and SHA-256 deduplication.',
-    meta: ['API Standard: OpenAPI 3.1 & Scalar', 'Test Assertions: 66 Tests / 550 Assertions', 'Bytecode: Zend OPcache Compiled']
-  },
-  'gateway-life': {
-    title: 'Life AI Engine (FastAPI & Python 3.14)',
-    desc: 'Lightweight asynchronous AI engine running evening CBT debrief sentiment classification and natural language habit query decomposition.',
-    meta: ['Server: Uvicorn Asynchronous ASGI', 'Port: localhost:8000', 'Endpoints: /api/v1/debrief, /health']
-  },
-  'gateway-study': {
-    title: 'Study Engine & Matrix Solver (Next.js Serverless)',
-    desc: 'Algorithmic route handlers calculating FSRS-4.5 interval matrices, conflict resolution algorithms for university timetables, and RFC 5545 .ics generation.',
-    meta: ['Scheduler: FSRS-4.5 Mathematical Core', 'Format: RFC 5545 iCalendar', 'Contract: OpenAPI 3.1 Compliant']
-  },
-  'db-fin': {
-    title: 'finance_ledger (Supabase PostgreSQL 16)',
-    desc: 'ACID-compliant financial ledger utilizing UUIDv7 sequential primary keys for maximum B-tree indexing efficiency and NUMERIC(15,4) precision columns.',
-    meta: ['Primary Keys: UUIDv7', 'Col Precision: NUMERIC(15,4)', 'Pooler: PgBouncer Port 6543']
-  },
-  'db-life': {
-    title: 'life_os Persistence (Neon Cloud PostgreSQL)',
-    desc: 'Relational data store managed via Prisma ORM client. Stores circadian energy timeline snapshots, 365-day habit compliance, and focus logs.',
-    meta: ['ORM: Prisma Client 5.x', 'Driver: Neon Serverless PgBouncer', 'Idle Cost: $0.00/mo']
-  },
-  'db-telemetry': {
-    title: 'nextomni_telemetry (Master Feature Store)',
-    desc: 'Centralized Analytical Base Table (ABT) ingesting real-time operational telemetry across focus sessions, study reviews, and habit completions for causal analysis.',
-    meta: ['Ingestion: Real-time ACID Stream', 'Target: R & Python ML Pipelines', 'Status: Active Continuous Flow']
-  },
-  'ml-r': {
-    title: 'R & Quarto Causal Analytics Engine',
-    desc: 'Executes Two-Way ANOVA & Tukey HSD post-hoc hypothesis tests, multivariate OLS flow regression, and Kaplan-Meier habit survival decay modeling.',
-    meta: ['Language: R 4.4 / Quarto CLI', 'Statistics: ANOVA, Tukey HSD, OLS', 'Artifacts: Automated HTML / PDF Reports']
-  },
-  'ml-py': {
-    title: 'Python Machine Learning (Scikit-Learn GBM)',
-    desc: '7-day cognitive burnout probability classifier trained on historical telemetry to trigger early closed-loop deload warnings back to NextOmni Life.',
-    meta: ['Model: Gradient Boosting Classifier', 'Accuracy: 94.2% Validation Score', 'Response Time: < 15ms']
-  },
-  'ml-tab': {
-    title: 'Tableau Executive LOD Storyboard',
-    desc: 'Level-of-Detail (LOD) executive dashboard providing an overarching radar clock of daily focus, academic progress, and net-worth trajectories.',
-    meta: ['Visualization: Tableau Public / Cloud', 'Type: Dynamic LOD Radar Clock', 'Audience: Recruiter & Executive Review']
-  }
-};
-
-document.querySelectorAll('.node-clickable').forEach(node => {
-  node.addEventListener('click', () => {
-    document.querySelectorAll('.node-clickable').forEach(n => n.classList.remove('selected'));
-    node.classList.add('selected');
-
-    const key = node.dataset.node;
-    const data = archNodesData[key];
-    if (data) {
-      document.getElementById('inspector-title').textContent = data.title;
-      document.getElementById('inspector-desc').textContent = data.desc;
-      const metaContainer = document.getElementById('inspector-meta');
-      if (metaContainer) {
-        metaContainer.innerHTML = data.meta.map(m => `<span class="meta-item"><strong>•</strong> ${m}</span>`).join('');
-      }
-    }
-  });
-});
-
-// ==============================================================================
-// 10. Master Ecosystem PowerShell Terminal Simulation
+// 13. Master Ecosystem PowerShell Terminal Simulation
 // ==============================================================================
 const terminalScreen = document.getElementById('terminal-screen');
 const terminalInput = document.getElementById('terminal-input');
@@ -579,6 +1077,13 @@ function clearTerminal() {
       <div class="terminal-line info-line">[+] Terminal cleared. Ready for commands.</div>
     `;
   }
+}
+
+function copyTerminalOutput() {
+  if (!terminalScreen) return;
+  navigator.clipboard.writeText(terminalScreen.innerText).then(() => {
+    showToast('Terminal output copied to clipboard', '📋');
+  });
 }
 
 function executeCLICommand(cmd) {

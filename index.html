@@ -53,12 +53,22 @@
         </div>
       </a>
 
-      <!-- Live Heartbeat Status Badge -->
-      <div class="system-status-pill" id="system-status-pill">
+      <!-- Quick Command Palette Trigger (UX Upgrade) -->
+      <button class="nav-search-btn" id="search-trigger-btn" onclick="openCommandPalette()" title="Press Ctrl+K or ⌘K">
+        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="search-label">Quick Search</span>
+        <kbd class="search-kbd">⌘K</kbd>
+      </button>
+
+      <!-- Live Heartbeat Status Badge (Clickable health check) -->
+      <button class="system-status-pill" id="system-status-pill" onclick="openHealthModal()" title="Click to view live microservice health">
         <span class="pulse-dot"></span>
-        <span class="status-label">4 PILLARS OPERATIONAL</span>
+        <span class="status-label">4 PILLARS ACTIVE</span>
         <span class="status-meta font-mono">$0/mo CLOUD</span>
-      </div>
+      </button>
 
       <!-- Navigation Links -->
       <nav class="nav-menu" id="nav-menu">
@@ -71,6 +81,12 @@
 
       <!-- Header Action Items -->
       <div class="nav-actions">
+        <!-- 1-Click Guided Recruiter Tour Trigger -->
+        <button id="tour-nav-btn" class="icon-btn tour-btn" onclick="startRecruiterTour()" title="Start 1-Click Recruiter Guided Tour">
+          <span class="tour-icon">🧭</span>
+          <span class="tour-label">Recruiter Tour</span>
+        </button>
+
         <!-- Procedural 40Hz Audio Toggle -->
         <button id="soundscape-btn" class="icon-btn" title="Toggle 40Hz Binaural Gamma Focus Soundscape" aria-label="Soundscape toggle">
           <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,6 +145,10 @@
               <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
           </a>
+          <button class="btn btn-hero-tour" onclick="startRecruiterTour()" id="cta-tour">
+            <span class="btn-tour-icon">🧭</span>
+            <span>Start Guided Recruiter Tour</span>
+          </button>
           <a href="#sandbox" class="btn btn-hero-secondary" id="cta-sandbox">
             <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -212,7 +232,11 @@
                 </div>
                 <div class="module-meta">
                   <span class="module-pill pill-emerald">PILLAR 1 • HUMAN FLOURISHING</span>
-                  <span class="module-status"><span class="status-dot-green"></span> Port :3000</span>
+                  <div class="live-status-row">
+                    <span class="status-dot-green"></span>
+                    <span class="module-status-text" id="status-text-life">Port :3000 Ready</span>
+                    <button class="ping-btn" onclick="pingService('life')" title="Check local connectivity">Ping</button>
+                  </div>
                 </div>
               </div>
 
@@ -269,7 +293,9 @@
 
               <div class="module-card-footer">
                 <button class="btn btn-outline" onclick="launchSandboxTab('life')">Test Habit & 40Hz Engine</button>
-                <a href="#architecture" class="btn btn-text">View Dataflow →</a>
+                <button class="btn btn-copy-cmd" onclick="copyLaunchCommand('serve-life')" title="Copy launch command to clipboard">
+                  📋 Copy Boot Command
+                </button>
               </div>
             </div>
           </article>
@@ -287,7 +313,11 @@
                 </div>
                 <div class="module-meta">
                   <span class="module-pill pill-indigo">PILLAR 2 • ACADEMIC MASTERY</span>
-                  <span class="module-status"><span class="status-dot-green"></span> Port :3001</span>
+                  <div class="live-status-row">
+                    <span class="status-dot-green"></span>
+                    <span class="module-status-text" id="status-text-study">Port :3001 Ready</span>
+                    <button class="ping-btn" onclick="pingService('study')" title="Check local connectivity">Ping</button>
+                  </div>
                 </div>
               </div>
 
@@ -344,7 +374,9 @@
 
               <div class="module-card-footer">
                 <button class="btn btn-outline" onclick="launchSandboxTab('study')">Run FSRS Reviewer</button>
-                <a href="http://localhost:3001/api/v1/openapi.json" target="_blank" class="btn btn-text">OpenAPI Spec ↗</a>
+                <button class="btn btn-copy-cmd" onclick="copyLaunchCommand('serve-study')" title="Copy launch command to clipboard">
+                  📋 Copy Boot Command
+                </button>
               </div>
             </div>
           </article>
@@ -364,7 +396,11 @@
                 </div>
                 <div class="module-meta">
                   <span class="module-pill pill-cyan">PILLAR 3 • HIGH-PRECISION FINTECH</span>
-                  <span class="module-status"><span class="status-dot-green"></span> Laravel / Nuxt 3</span>
+                  <div class="live-status-row">
+                    <span class="status-dot-green"></span>
+                    <span class="module-status-text" id="status-text-finance">Vercel & Render Ready</span>
+                    <button class="ping-btn" onclick="pingService('finance')" title="Check remote connectivity">Ping</button>
+                  </div>
                 </div>
               </div>
 
@@ -441,7 +477,11 @@
                 </div>
                 <div class="module-meta">
                   <span class="module-pill pill-amber">PILLAR 4 • DATA SCIENCE & ML</span>
-                  <span class="module-status"><span class="status-dot-green"></span> Port :8000</span>
+                  <div class="live-status-row">
+                    <span class="status-dot-green"></span>
+                    <span class="module-status-text" id="status-text-intelligence">Port :8000 Ready</span>
+                    <button class="ping-btn" onclick="pingService('intelligence')" title="Check local connectivity">Ping</button>
+                  </div>
                 </div>
               </div>
 
@@ -498,7 +538,9 @@
 
               <div class="module-card-footer">
                 <button class="btn btn-outline" onclick="launchSandboxTab('intelligence')">Test Burnout Predictor</button>
-                <a href="#terminal" class="btn btn-text">Run ML Pipeline →</a>
+                <button class="btn btn-copy-cmd" onclick="copyLaunchCommand('serve-intel')" title="Copy launch command to clipboard">
+                  📋 Copy Boot Command
+                </button>
               </div>
             </div>
           </article>
@@ -674,7 +716,7 @@
 
           <!-- Dynamic Arch Node Inspector Info Card -->
           <div class="arch-inspector-panel" id="arch-inspector">
-            <div class="inspector-badge">SYSTEM ARCHITECTURE INSPECTOR</div>
+            <div class="inspector-badge">SYSTEM ARCHITECTURE INSPECTOR (CLICK ANY NODE ABOVE TO INSPECT)</div>
             <div class="inspector-content">
               <h4 id="inspector-title" class="inspector-title">NextOmni Telemetry Feature Store (Cross-Module Ingestion)</h4>
               <p id="inspector-desc" class="inspector-desc">
@@ -701,7 +743,7 @@
           </div>
           <h2 class="section-title">Test Drive NextOmni's Core Algorithms Live</h2>
           <p class="section-desc max-w-2xl mx-auto">
-            Interact with live client-side simulations of the key mathematical and cognitive engines powering all four pillars.
+            Interact with live client-side simulations of the key mathematical and cognitive engines powering all four pillars. No installation required.
           </p>
         </div>
 
@@ -737,11 +779,11 @@
                   <span class="badge-emerald">Live Huberman Protocol</span>
                 </div>
                 <p class="panel-desc">
-                  Demonstrating live habit tracking with streak arithmetic and a dynamic circadian clock that computes your current biological phase based on local solar time.
+                  Demonstrating live habit tracking with streak arithmetic, custom habit creation, and a dynamic circadian clock that computes your biological phase based on local solar time.
                 </p>
 
-                <!-- Interactive Habit Checklist -->
-                <div class="interactive-habits-list">
+                <!-- Interactive Habit Checklist with Custom Habit Creator -->
+                <div class="interactive-habits-list" id="habits-container">
                   <div class="habit-item-box" data-id="1">
                     <button class="habit-checkbox active" onclick="toggleHabitSandbox(1)">✓</button>
                     <div class="habit-details">
@@ -770,31 +812,65 @@
                   </div>
                 </div>
 
-                <!-- 40Hz Audio Wave Generator Control -->
+                <!-- Custom Habit Creator Input -->
+                <form class="add-habit-form" onsubmit="addCustomHabit(event)">
+                  <input type="text" id="new-habit-input" class="habit-input font-sans" placeholder="Add custom habit (e.g. Zone 2 Cardio, Cold Shower)..." />
+                  <button type="submit" class="btn btn-outline btn-add-habit">+ Add Habit</button>
+                </form>
+
+                <!-- 40Hz Audio Wave Generator Control with Oscilloscope Canvas -->
                 <div class="audio-generator-card">
-                  <div class="audio-info">
-                    <div class="audio-title">Procedural 40Hz Binaural Soundscape Generator</div>
-                    <div class="audio-desc">Synthesized in real-time with Web Audio oscillators. No MP3 assets.</div>
+                  <div class="audio-header-row">
+                    <div class="audio-info">
+                      <div class="audio-title">Procedural Binaural Soundscape Generator</div>
+                      <div class="audio-desc">Synthesized in real-time with Web Audio oscillators. No audio files needed.</div>
+                    </div>
+                    <div class="frequency-selector">
+                      <button class="freq-pill active" onclick="setBinauralBeat(40, 'Gamma (40Hz)')">Gamma 40Hz</button>
+                      <button class="freq-pill" onclick="setBinauralBeat(10, 'Alpha (10Hz)')">Alpha 10Hz</button>
+                      <button class="freq-pill" onclick="setBinauralBeat(6, 'Theta (6Hz)')">Theta 6Hz</button>
+                    </div>
                   </div>
-                  <button class="btn btn-emerald-action" id="sandbox-audio-btn" onclick="toggleSoundscape()">
-                    <span id="sandbox-audio-text">Play 40Hz Gamma Soundscape</span>
-                  </button>
+
+                  <!-- Audio Wave Oscilloscope Canvas -->
+                  <div class="oscilloscope-wrapper">
+                    <canvas id="audio-oscilloscope" width="480" height="48"></canvas>
+                  </div>
+
+                  <div class="audio-footer-row">
+                    <button class="btn btn-emerald-action" id="sandbox-audio-btn" onclick="toggleSoundscape()">
+                      <span id="sandbox-audio-text">Play 40Hz Gamma Soundscape</span>
+                    </button>
+                    <span class="audio-current-mode font-mono text-cyan" id="current-audio-mode">Current: Gamma 40Hz (Active Focus)</span>
+                  </div>
                 </div>
               </div>
 
-              <!-- Right: Circadian Clock Widget -->
+              <!-- Right: Circadian Clock Widget with Interactive Time Scrubber -->
               <div class="panel-right">
                 <div class="circadian-card">
                   <div class="circadian-header">
                     <span class="circadian-title">Biological Circadian Clock</span>
                     <span class="circadian-time" id="circadian-clock-time">00:00:00</span>
                   </div>
+
                   <div class="circadian-dial-wrap">
                     <div class="circadian-dial" id="circadian-dial">
                       <div class="dial-hand" id="dial-hand"></div>
                       <div class="dial-center"></div>
                     </div>
                   </div>
+
+                  <!-- Interactive Time Scrubber (UX Upgrade) -->
+                  <div class="time-scrubber-box">
+                    <div class="scrubber-label-row">
+                      <span>Simulate Time of Day:</span>
+                      <span class="font-mono text-cyan" id="scrubber-time-val">Live Time</span>
+                    </div>
+                    <input type="range" min="0" max="1439" value="720" class="slider" id="circadian-scrubber" oninput="scrubCircadianTime(this.value)" />
+                    <button class="btn-reset-time" onclick="resetToRealTime()">↺ Reset to Real Clock</button>
+                  </div>
+
                   <div class="circadian-details">
                     <div class="phase-tag" id="current-phase-badge">Optimal Phase</div>
                     <h4 class="phase-name" id="current-phase-title">Deep Recovery & Consolidation</h4>
@@ -819,16 +895,27 @@
                   Unlike legacy SM-2 (Anki), FSRS-4.5 uses 17 empirical parameters with power-law forgetting curves to compute precise Retrievability (R), Stability (S), and Difficulty (D).
                 </p>
 
+                <!-- Deck Switcher Selector (UX Upgrade) -->
+                <div class="deck-selector-row">
+                  <span class="deck-label">Select Course Deck:</span>
+                  <div class="deck-pills">
+                    <button class="deck-pill active" onclick="switchStudyDeck(0)">CS4102: Distributed Consensus</button>
+                    <button class="deck-pill" onclick="switchStudyDeck(1)">AI3205: Transformer Attention</button>
+                    <button class="deck-pill" onclick="switchStudyDeck(2)">CS3203: LSM vs B+ Trees</button>
+                  </div>
+                </div>
+
                 <!-- Interactive Flashcard Widget -->
                 <div class="flashcard-box" id="flashcard-box">
                   <div class="card-question-area">
-                    <span class="card-module-tag">CS4102 • DISTRIBUTED SYSTEMS</span>
-                    <h4 class="card-q">What is the core distinction between Paxos and Raft consensus algorithms?</h4>
+                    <span class="card-module-tag" id="card-deck-tag">CS4102 • DISTRIBUTED SYSTEMS</span>
+                    <h4 class="card-q" id="card-q-text">What is the core distinction between Paxos and Raft consensus algorithms?</h4>
                     <div class="card-answer-revealed" id="card-answer">
-                      <p><strong>Answer:</strong> Raft decomposes consensus into <em>Leader Election</em>, <em>Log Replication</em>, and <em>Safety</em>, enforcing strong leader dominance to maximize human understandability. Paxos is symmetric and permits multi-proposer coordination without a singular leader invariant.</p>
+                      <p id="card-ans-text"><strong>Answer:</strong> Raft decomposes consensus into <em>Leader Election</em>, <em>Log Replication</em>, and <em>Safety</em>, enforcing strong leader dominance to maximize human understandability. Paxos is symmetric and permits multi-proposer coordination without a singular leader invariant.</p>
                       <div class="math-stats">
-                        <span>Current Stability (S): <strong id="fsrs-stability">3.2 days</strong></span>
+                        <span>Stability (S): <strong id="fsrs-stability">3.2 days</strong></span>
                         <span>Retrievability (R): <strong id="fsrs-retrievability">92.4%</strong></span>
+                        <span>Difficulty (D): <strong id="fsrs-difficulty">4.8 / 10</strong></span>
                       </div>
                     </div>
                   </div>
@@ -853,6 +940,24 @@
                         <span class="grade-interval">7.5d</span>
                       </button>
                     </div>
+                  </div>
+                </div>
+
+                <!-- University Timetable Matrix Collision Demo (UX Upgrade) -->
+                <div class="timetable-demo-box">
+                  <div class="tt-header">
+                    <span class="tt-title">University Timetable Matrix Collision Detection</span>
+                    <button class="btn-collision-toggle" id="btn-toggle-collision" onclick="toggleTimetableCollision()">Simulate Schedule Collision</button>
+                  </div>
+                  <div class="timetable-grid-preview" id="timetable-preview-grid">
+                    <div class="tt-slot"><span>Mon 10:00</span><strong>CS4102 Lecture</strong></div>
+                    <div class="tt-slot"><span>Tue 14:00</span><strong>AI3205 Lab</strong></div>
+                    <div class="tt-slot" id="tt-slot-wed"><span>Wed 11:00</span><strong id="tt-wed-course">CS3203 Lecture</strong></div>
+                    <div class="tt-slot"><span>Thu 16:00</span><strong>Study Ultradian</strong></div>
+                  </div>
+                  <div class="tt-status-line" id="tt-status-line">
+                    <span class="status-indicator-dot"></span>
+                    <span id="tt-status-text">Matrix Status: 0 Conflicts Detected • RFC 5545 iCalendar Sync Ready</span>
                   </div>
                 </div>
               </div>
@@ -887,7 +992,7 @@
                   <div class="gpa-result-box">
                     <div class="result-label">Forecasted Cumulative CGPA:</div>
                     <div class="result-number text-indigo" id="final-gpa-val">3.90</div>
-                    <div class="result-badge">First Class Honors Guaranteed</div>
+                    <div class="result-badge" id="gpa-honors-badge">First Class Honors Guaranteed</div>
                   </div>
                 </div>
               </div>
@@ -922,12 +1027,20 @@
                   </div>
                 </div>
 
-                <!-- Instant SHA-256 Hash Deduplicator -->
+                <!-- Instant SHA-256 Hash Deduplicator with Sample Selector -->
                 <div class="hash-dedup-box">
                   <div class="hash-header">
-                    <span class="hash-title">Live Bank Statement SHA-256 Hash Ingestion</span>
+                    <span class="hash-title">Bank Statement Parser & SHA-256 Deduplication</span>
                     <span class="hash-engine font-mono">crypto.subtle</span>
                   </div>
+
+                  <!-- Sample Selector Pills -->
+                  <div class="sample-statement-pills">
+                    <button class="statement-pill active" onclick="loadSampleStatement('maybank')">Maybank2u PDF</button>
+                    <button class="statement-pill" onclick="loadSampleStatement('cimb')">CIMB Clicks CSV</button>
+                    <button class="statement-pill" onclick="loadSampleStatement('tng')">Touch 'n Go JSON</button>
+                  </div>
+
                   <div class="input-row">
                     <input type="text" id="statement-input" class="statement-input" value="Maybank2u_TXN_20261014_RM450.00_RELOAD" oninput="computeStatementHash()" />
                   </div>
@@ -942,12 +1055,24 @@
                 </div>
               </div>
 
-              <!-- Right: Net Worth Breakdown -->
+              <!-- Right: Net Worth Breakdown & Currency Converter -->
               <div class="panel-right">
                 <div class="finance-breakdown-card">
                   <div class="fb-header">
                     <span class="fb-title">Multi-Account Balance Aggregator</span>
-                    <span class="fb-total font-mono text-cyan">RM 36,121.45</span>
+                    <span class="fb-total font-mono text-cyan" id="fb-total-display">RM 36,121.45</span>
+                  </div>
+
+                  <!-- Live High-Precision Currency Switcher -->
+                  <div class="currency-switcher-row">
+                    <span>Currency View:</span>
+                    <div class="curr-pills">
+                      <button class="curr-pill active" onclick="switchCurrency('MYR')">MYR</button>
+                      <button class="curr-pill" onclick="switchCurrency('USD')">USD</button>
+                      <button class="curr-pill" onclick="switchCurrency('SGD')">SGD</button>
+                      <button class="curr-pill" onclick="switchCurrency('EUR')">EUR</button>
+                      <button class="curr-pill" onclick="switchCurrency('GBP')">GBP</button>
+                    </div>
                   </div>
 
                   <div class="fb-accounts-list">
@@ -956,7 +1081,7 @@
                         <span class="acc-name">Maybank Islamic Savings</span>
                         <span class="acc-type">Primary Liquid Float</span>
                       </div>
-                      <span class="acc-bal font-mono">RM 14,850.20</span>
+                      <span class="acc-bal font-mono" id="acc-bal-1">RM 14,850.20</span>
                     </div>
 
                     <div class="fb-account-item">
@@ -964,7 +1089,7 @@
                         <span class="acc-name">CIMB High Yield Account</span>
                         <span class="acc-type">Emergency 6-Month Reserve</span>
                       </div>
-                      <span class="acc-bal font-mono">RM 16,500.00</span>
+                      <span class="acc-bal font-mono" id="acc-bal-2">RM 16,500.00</span>
                     </div>
 
                     <div class="fb-account-item">
@@ -972,7 +1097,7 @@
                         <span class="acc-name">Touch 'n Go eWallet & GrabPay</span>
                         <span class="acc-type">Micro-Transit & Daily Transit</span>
                       </div>
-                      <span class="acc-bal font-mono">RM 4,771.25</span>
+                      <span class="acc-bal font-mono" id="acc-bal-3">RM 4,771.25</span>
                     </div>
                   </div>
 
@@ -1030,9 +1155,23 @@
                     <input type="range" min="20" max="100" step="5" value="90" class="slider" id="input-ml-habit" oninput="predictBurnout()" />
                   </div>
                 </div>
+
+                <!-- Interactive SQL Feature Store Query Inspector (UX Upgrade) -->
+                <div class="feature-store-query-box">
+                  <div class="fsq-header">
+                    <span class="fsq-title">PostgreSQL Feature Store Telemetry Queries</span>
+                    <div class="query-tab-pills">
+                      <button class="q-pill active" onclick="switchFeatureQuery('focus')">focus_sessions</button>
+                      <button class="q-pill" onclick="switchFeatureQuery('habits')">habit_logs</button>
+                      <button class="q-pill" onclick="switchFeatureQuery('anova')">anova_causal</button>
+                    </div>
+                  </div>
+                  <pre class="fsq-code font-mono" id="fsq-code-display">SELECT session_id, duration_minutes, deep_work_ratio, fsrs_retention FROM focus_sessions WHERE date >= CURRENT_DATE - 7;</pre>
+                  <div class="fsq-result-summary font-mono" id="fsq-result-summary">✓ 14 Rows Returned in 3.2ms • ACID Verified</div>
+                </div>
               </div>
 
-              <!-- Right: Model Prediction Output -->
+              <!-- Right: Model Prediction Output & Cognitive Radar -->
               <div class="panel-right">
                 <div class="burnout-result-card">
                   <div class="br-header">
@@ -1058,6 +1197,22 @@
                     <p class="risk-recommendation" id="risk-recommendation-text">
                       Optimal cognitive equilibrium detected. Maintain current 90-minute ultradian study blocks and current sleep schedule.
                     </p>
+                  </div>
+
+                  <!-- Cognitive Balance Radar Chart Visualization -->
+                  <div class="radar-box">
+                    <div class="radar-title">Equilibrium Radar</div>
+                    <svg viewBox="0 0 100 100" class="radar-svg" id="radar-chart">
+                      <polygon points="50,10 90,50 50,90 10,50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                      <polygon points="50,25 75,50 50,75 25,50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                      <polygon id="radar-poly" points="50,20 82,50 50,85 18,50" fill="rgba(6,182,212,0.25)" stroke="#06b6d4" stroke-width="1.5"/>
+                    </svg>
+                    <div class="radar-labels">
+                      <span class="rl-top">Focus</span>
+                      <span class="rl-right">Sleep</span>
+                      <span class="rl-bottom">Habits</span>
+                      <span class="rl-left">Energy</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1154,6 +1309,7 @@
             </div>
             <div class="terminal-title font-mono">pwsh — Ezra Lai@NextOmni: ~/nextomni/run_ecosystem.ps1</div>
             <div class="terminal-actions">
+              <button class="t-btn-clear" onclick="copyTerminalOutput()" title="Copy terminal log">📋 Copy</button>
               <button class="t-btn-clear" onclick="clearTerminal()">Clear</button>
             </div>
           </div>
@@ -1192,6 +1348,132 @@
     </section>
   </main>
 
+  <!-- Command Palette Modal (Ctrl+K / ⌘K) -->
+  <div class="modal-backdrop" id="command-palette-backdrop" onclick="closeCommandPalette(event)">
+    <div class="command-palette-modal" onclick="event.stopPropagation()">
+      <div class="cp-search-row">
+        <svg class="cp-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cp-input" class="cp-input" placeholder="Type a command or jump to module..." autocomplete="off" oninput="filterCommandPalette(this.value)" />
+        <kbd class="cp-esc-kbd" onclick="closeCommandPalette()">ESC</kbd>
+      </div>
+
+      <div class="cp-results-list" id="cp-results-list">
+        <!-- Results dynamically populated -->
+      </div>
+
+      <div class="cp-footer">
+        <span class="cp-hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+        <span class="cp-hint"><kbd>↵</kbd> Select</span>
+        <span class="cp-hint"><kbd>ESC</kbd> Close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Microservice Live Health Modal -->
+  <div class="modal-backdrop" id="health-modal-backdrop" onclick="closeHealthModal(event)">
+    <div class="health-modal" onclick="event.stopPropagation()">
+      <div class="hm-header">
+        <div class="hm-title-wrap">
+          <span class="pulse-dot"></span>
+          <h3 class="hm-title">Ecosystem Microservice Health & Connectivity</h3>
+        </div>
+        <button class="hm-close-btn" onclick="closeHealthModal()">✕</button>
+      </div>
+      <p class="hm-desc">Real-time status of local development endpoints and remote production edge gateways.</p>
+      
+      <div class="hm-service-list">
+        <div class="hm-item" id="hm-life">
+          <div class="hm-item-info">
+            <strong>NextOmni Life (Web & AI Engine)</strong>
+            <span>http://localhost:3000 & :8000</span>
+          </div>
+          <span class="hm-badge badge-checking">Checking...</span>
+        </div>
+        <div class="hm-item" id="hm-study">
+          <div class="hm-item-info">
+            <strong>NextOmni Study (Next.js 15 & FSRS)</strong>
+            <span>http://localhost:3001</span>
+          </div>
+          <span class="hm-badge badge-checking">Checking...</span>
+        </div>
+        <div class="hm-item" id="hm-finance">
+          <div class="hm-item-info">
+            <strong>NextOmni Finance (Laravel & Vercel)</strong>
+            <span>https://nextomni-finance.vercel.app</span>
+          </div>
+          <span class="hm-badge badge-checking">Checking...</span>
+        </div>
+        <div class="hm-item" id="hm-intelligence">
+          <div class="hm-item-info">
+            <strong>NextOmni Intelligence (Python ML & Feature Store)</strong>
+            <span>http://localhost:8000/docs</span>
+          </div>
+          <span class="hm-badge badge-checking">Checking...</span>
+        </div>
+      </div>
+
+      <div class="hm-footer">
+        <button class="btn btn-outline" onclick="checkAllMicroservices()">Refresh All Checks</button>
+        <button class="btn btn-primary" onclick="closeHealthModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1-Click Guided Recruiter Tour Tooltip Overlay -->
+  <div class="tour-overlay-card" id="tour-card" style="display: none;">
+    <div class="tour-header">
+      <span class="tour-step-badge" id="tour-step-badge">Step 1 of 5</span>
+      <button class="tour-close-btn" onclick="endRecruiterTour()">✕</button>
+    </div>
+    <h4 class="tour-title" id="tour-title">NextOmni Vision & System Depth</h4>
+    <p class="tour-body" id="tour-body">
+      Explore the unified multi-domain architecture authored by Ezra Lai. Built with zero mockups, live ACID compliance, and 100% free-tier production cloud deployment.
+    </p>
+    <div class="tour-actions">
+      <button class="btn-tour-secondary" id="tour-prev-btn" onclick="prevTourStep()">Previous</button>
+      <div class="tour-dots" id="tour-dots">
+        <span class="t-dot-step active"></span>
+        <span class="t-dot-step"></span>
+        <span class="t-dot-step"></span>
+        <span class="t-dot-step"></span>
+        <span class="t-dot-step"></span>
+      </div>
+      <button class="btn-tour-primary" id="tour-next-btn" onclick="nextTourStep()">Next</button>
+    </div>
+  </div>
+
+  <!-- Floating Quick Actions Dock (UX Upgrade) -->
+  <aside class="floating-dock" aria-label="Quick Actions Dock">
+    <button class="dock-btn" onclick="openCommandPalette()" title="Open Command Palette (⌘K)">
+      <span class="dock-icon">⌘</span>
+      <span class="dock-tooltip">Search (⌘K)</span>
+    </button>
+    <button class="dock-btn" onclick="startRecruiterTour()" title="Start Recruiter Tour">
+      <span class="dock-icon">🧭</span>
+      <span class="dock-tooltip">Recruiter Tour</span>
+    </button>
+    <button class="dock-btn" id="dock-soundscape-btn" onclick="toggleSoundscape()" title="Toggle 40Hz Audio">
+      <span class="dock-icon">🎧</span>
+      <span class="dock-tooltip">40Hz Audio</span>
+    </button>
+    <button class="dock-btn" onclick="openHealthModal()" title="Microservice Health">
+      <span class="dock-icon">⚡</span>
+      <span class="dock-tooltip">Health Check</span>
+    </button>
+    <button class="dock-btn" id="dock-top-btn" onclick="scrollToTop()" title="Scroll to Top">
+      <svg class="dock-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+      <span class="dock-tooltip">Top</span>
+    </button>
+  </aside>
+
+  <!-- Global Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-container">
@@ -1229,6 +1511,7 @@
           <div class="footer-col">
             <span class="col-title">Author & Engineering</span>
             <a href="https://github.com/ezralai" target="_blank" rel="noopener noreferrer">GitHub / Ezra Lai</a>
+            <a href="https://github.com/ezralai/nextomni-main" target="_blank" rel="noopener noreferrer">nextomni-main Repo</a>
             <a href="https://nextomni-finance.onrender.com/docs" target="_blank" rel="noopener noreferrer">Scalar API Live</a>
             <a href="http://localhost:3001/api/v1/openapi.json" target="_blank" rel="noopener noreferrer">Study OpenAPI Spec</a>
             <span class="col-meta">License: MIT • 2026</span>

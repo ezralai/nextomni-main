@@ -127,7 +127,11 @@ if ($ServeLife) {
 }
 
 if ($ServeLanding -or $ServeMain) {
-    Print-ModuleHeader -name "NextOmni Master Landing Page" -tech "Static Web Server on http://localhost:5000"
+    Print-ModuleHeader -name "NextOmni Master Landing Page" -tech "Zero-Dependency Server on http://localhost:5000"
     Set-Location $WorkspaceRoot
-    python -m http.server 5000
+    if (Get-Command node -ErrorAction SilentlyContinue) {
+        node serve.js 5000
+    } else {
+        python -m http.server 5000
+    }
 }
