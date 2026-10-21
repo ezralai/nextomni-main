@@ -1,0 +1,66 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NextOmni Ecosystem Master Gateway API",
+    "version": "1.2.0",
+    "description": "Standardized OpenAPI 3.1.0 specification for the NextOmni Master Portal & Cross-Module Telemetry Event Bus authored by Ezra Lai.",
+    "contact": {
+      "name": "Ezra Lai",
+      "url": "https://github.com/ezralai/nextomni-main"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local Master Ecosystem Server (Port 5000)"
+    }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Master Health & Observability Probe",
+        "description": "Returns operational status, uptime, memory heap usage, and active pillar port allocations.",
+        "responses": {
+          "200": {
+            "description": "Master portal is healthy and listening",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "healthy" },
+                    "module": { "type": "string", "example": "NextOmni Master Portal" },
+                    "author": { "type": "string", "example": "Ezra Lai" },
+                    "uptimeSeconds": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "summary": "OpenAPI 3.1 Contract Specification",
+        "description": "Returns the complete ecosystem API contract specification."
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TelemetryEvent": {
+        "type": "object",
+        "properties": {
+          "event_id": { "type": "string", "example": "evt_trace-7f3a9c" },
+          "event_type": { "type": "string", "example": "study.session.completed" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "trace_id": { "type": "string", "example": "TRACE-7F3A9C" },
+          "producer": { "type": "string", "example": "nextomni-study" },
+          "data": { "type": "object" }
+        },
+        "required": ["event_id", "event_type", "timestamp", "trace_id", "producer"]
+      }
+    }
+  }
+}

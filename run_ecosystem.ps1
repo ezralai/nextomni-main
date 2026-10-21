@@ -48,7 +48,7 @@ if ($PingAll -or $HealthCheck) {
         @{ Name = "NextOmni Study"; Url = "http://localhost:3001/api/v1/health"; Stack = "Next.js 15 / FSRS-4.5"; Role = "Academic Cognitive Engine" },
         @{ Name = "NextOmni Life Web"; Url = "http://localhost:3000/api/v1/health"; Stack = "Next.js 15 / Prisma"; Role = "Habit & Circadian LifeOS" },
         @{ Name = "NextOmni Intelligence"; Url = "http://localhost:8000/api/v1/health"; Stack = "FastAPI / Python ML"; Role = "Burnout Risk & Causal Store" },
-        @{ Name = "NextOmni Life AI Engine"; Url = "http://localhost:8000/health"; Stack = "FastAPI / PyTorch"; Role = "AI Debrief Synthesis" },
+        @{ Name = "NextOmni Life AI Engine"; Url = "http://localhost:8001/api/v1/health"; FallbackUrl = "http://localhost:8000/health"; Stack = "FastAPI / PyTorch"; Role = "AI Debrief Synthesis" },
         @{ Name = "NextOmni Finance (Cloud)"; Url = "https://nextomni-finance.vercel.app"; Stack = "Nuxt 3 / Laravel 11"; Role = "High-Precision Ledger" }
     )
 
@@ -61,44 +61,52 @@ if ($PingAll -or $HealthCheck) {
         $latencyMs = 0
         $extraInfo = ""
 
-        try {
-            $req = [System.Net.WebRequest]::Create($ep.Url)
-            $req.Timeout = 3500
-            $req.Method = "GET"
-            $resp = $req.GetResponse()
-            $sw.Stop()
-            $latencyMs = [math]::Round($sw.Elapsed.TotalMilliseconds, 1)
-            $httpResp = [System.Net.HttpWebResponse]$resp
-            $statusCode = [int]$httpResp.StatusCode
-            if ($statusCode -ge 200 -and $statusCode -lt 400) {
-                $statusStr = "ONLINE"
-            }
-            $stream = $resp.GetResponseStream()
-            $reader = New-Object System.IO.StreamReader($stream)
-            $content = $reader.ReadToEnd()
-            $resp.Close()
+        $urlsToTry = @($ep.Url)
+        if ($ep.FallbackUrl) { $urlsToTry += $ep.FallbackUrl }
 
-            if ($content -match '"status"\s*:\s*"healthy"') {
-                $extraInfo = "ACID Healthy"
-            } elseif ($content -match '"status"\s*:\s*"ok"') {
-                $extraInfo = "OK"
-            } else {
-                $extraInfo = "HTTP $statusCode"
-            }
-        } catch [System.Net.WebException] {
-            $sw.Stop()
-            $latencyMs = [math]::Round($sw.Elapsed.TotalMilliseconds, 1)
-            if ($_.Response) {
-                $httpResp = [System.Net.HttpWebResponse]$_.Response
+        foreach ($tryUrl in $urlsToTry) {
+            $sw.Restart()
+            try {
+                $req = [System.Net.WebRequest]::Create($tryUrl)
+                $req.Timeout = 2500
+                $req.Method = "GET"
+                $resp = $req.GetResponse()
+                $sw.Stop()
+                $latencyMs = [math]::Round($sw.Elapsed.TotalMilliseconds, 1)
+                $httpResp = [System.Net.HttpWebResponse]$resp
                 $statusCode = [int]$httpResp.StatusCode
-                $statusStr = "HTTP $statusCode"
-            } else {
-                $statusStr = "OFFLINE"
+                if ($statusCode -ge 200 -and $statusCode -lt 400) {
+                    $statusStr = "ONLINE"
+                }
+                $stream = $resp.GetResponseStream()
+                $reader = New-Object System.IO.StreamReader($stream)
+                $content = $reader.ReadToEnd()
+                $resp.Close()
+
+                if ($content -match '"status"\s*:\s*"healthy"') {
+                    $extraInfo = "ACID Healthy"
+                } elseif ($content -match '"status"\s*:\s*"ok"') {
+                    $extraInfo = "OK"
+                } else {
+                    $extraInfo = "HTTP $statusCode"
+                }
+                $ep.Url = $tryUrl
+                break
+            } catch [System.Net.WebException] {
+                $sw.Stop()
+                $latencyMs = [math]::Round($sw.Elapsed.TotalMilliseconds, 1)
+                if ($_.Response) {
+                    $httpResp = [System.Net.HttpWebResponse]$_.Response
+                    $statusCode = [int]$httpResp.StatusCode
+                    $statusStr = "HTTP $statusCode"
+                } else {
+                    $statusStr = "OFFLINE"
+                }
+                $extraInfo = "Process not bound or port idle"
+            } catch {
+                $statusStr = "ERR"
+                $extraInfo = $_.Exception.Message
             }
-            $extraInfo = "Process not bound or port idle"
-        } catch {
-            $statusStr = "ERR"
-            $extraInfo = $_.Exception.Message
         }
 
         $results += [PSCustomObject]@{

@@ -59,6 +59,19 @@ const server = http.createServer((req, res) => {
     }, null, 2));
   }
 
+  // API Route: OpenAPI 3.1.0 Specification Contract
+  if (urlPath === '/api/v1/openapi.json' || urlPath === '/openapi.json') {
+    const openapiPath = path.join(ROOT_DIR, 'openapi.json');
+    if (fs.existsSync(openapiPath)) {
+      res.writeHead(200, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache'
+      });
+      return fs.createReadStream(openapiPath).pipe(res);
+    }
+  }
+
   // Normalize URL and prevent directory traversal
   let safePath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[\/\\])+/, '');
   if (safePath === '/' || safePath === '\\') {
