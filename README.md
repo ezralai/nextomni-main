@@ -89,7 +89,7 @@ Across all 4 modules, the NextOmni suite enforces a cohesive Dark Slate / Deep O
 
 The NextOmni suite achieves zero hosting overhead while upholding production ACID guarantees:
 
-1. **Frontend Hosting (Edge)**: Vercel Free Hobby Tier / Netlify Edge (Global CDN, automatic SSL, pull-request preview domains).
+1. **Frontend Hosting**: Vercel Free Hobby Tier / Netlify Edge (Global CDN, automatic SSL, pull-request preview domains).
 2. **Backend Containers**: Render Free Web Services / Koyeb / Fly.io (512MB RAM Docker containers with OPcache bytecode compilation).
 3. **Managed PostgreSQL**: Supabase / Neon Cloud PostgreSQL 16 (PgBouncer connection pooling on port 6543, 500MB free storage, zero idle costs).
 4. **Queue Workers & Caching**: Database-backed queues (`QUEUE_CONNECTION=database`) and database cache (`CACHE_STORE=database`) eliminating the need for paid Redis clusters.
