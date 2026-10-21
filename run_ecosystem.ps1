@@ -36,6 +36,7 @@ if ($Status -or (-not $TestAll -and -not $VerifyAll -and -not $ServeStudy -and -
     Write-Host "`n[+] Ecosystem Health & Pillar Status Review:" -ForegroundColor Green
 
     $modules = @(
+        @{ Name = "NextOmni Main"; Dir = "nextomni-main"; Stack = "Master Ecosystem Portal | Vanilla CSS | Web Audio | Port 5000" },
         @{ Name = "NextOmni Finance"; Dir = "nextomni-finance"; Stack = "Laravel 11 REST | Nuxt 3 | Postgres 16 UUIDv7 | Scalar" },
         @{ Name = "NextOmni Life"; Dir = "nextomni-life"; Stack = "Next.js 15 | React 19 | FastAPI Python 3.14 | Prisma | Web Audio" },
         @{ Name = "NextOmni Intelligence"; Dir = "nextomni-intelligence"; Stack = "PostgreSQL Feature Store | R and Quarto | Python ML | Tableau" },
@@ -128,7 +129,7 @@ if ($ServeLife) {
 
 if ($ServeLanding -or $ServeMain) {
     Print-ModuleHeader -name "NextOmni Master Landing Page" -tech "Zero-Dependency Server on http://localhost:5000"
-    Set-Location $WorkspaceRoot
+    Set-Location (Join-Path $WorkspaceRoot "nextomni-main")
     if (Get-Command node -ErrorAction SilentlyContinue) {
         node serve.js 5000
     } else {
