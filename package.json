@@ -1,20 +1,26 @@
 {
-  "name": "nextomni",
-  "version": "1.0.0",
+  "name": "nextomni-main",
+  "version": "1.2.0",
   "private": true,
-  "description": "NextOmni Ecosystem — Flagship Multi-Domain Personal Operating System",
+  "description": "NextOmni Ecosystem Master Portal & Telemetry Gateway — Flagship Personal Operating System",
   "author": "Ezra Lai",
   "license": "MIT",
   "scripts": {
     "dev": "node serve.js 5000",
     "start": "node serve.js 5000",
     "serve": "node serve.js 5000",
-    "status": "powershell -File ./run_ecosystem.ps1 -Status",
-    "test:all": "powershell -File ./run_ecosystem.ps1 -TestAll",
-    "verify:all": "powershell -File ./run_ecosystem.ps1 -VerifyAll",
-    "serve:landing": "powershell -File ./run_ecosystem.ps1 -ServeLanding",
-    "serve:study": "powershell -File ./run_ecosystem.ps1 -ServeStudy",
-    "serve:life": "powershell -File ./run_ecosystem.ps1 -ServeLife",
-    "serve:intel": "powershell -File ./run_ecosystem.ps1 -ServeIntelligence"
+    "status": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -Status",
+    "ping": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -PingAll",
+    "ping:all": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -PingAll",
+    "health": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -HealthCheck",
+    "health:check": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -HealthCheck",
+    "test:all": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -TestAll",
+    "verify:all": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -VerifyAll",
+    "serve:landing": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeLanding",
+    "serve:main": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeMain",
+    "serve:study": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeStudy",
+    "serve:life": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeLife",
+    "serve:intel": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeIntelligence",
+    "serve:finance": "powershell -ExecutionPolicy Bypass -File ./run_ecosystem.ps1 -ServeFinance"
   }
 }
