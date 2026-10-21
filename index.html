@@ -765,6 +765,10 @@
             <span class="tab-icon">🧠</span>
             <span>NextOmni Intelligence: Burnout ML</span>
           </button>
+          <button class="sandbox-tab-btn" data-tab="telemetry" id="tab-btn-telemetry">
+            <span class="tab-icon">⚡</span>
+            <span>Cross-Module Telemetry Bus</span>
+          </button>
         </div>
 
         <!-- Sandbox Content Panels -->
@@ -1219,6 +1223,139 @@
             </div>
           </div>
 
+          <!-- 5. Cross-Module Telemetry Event Bus Panel -->
+          <div class="sandbox-panel" id="sandbox-panel-telemetry">
+            <div class="panel-grid">
+              <!-- Left: Controls & Parameters -->
+              <div class="panel-left">
+                <div class="panel-title-row">
+                  <h3 class="panel-title">Cross-Module Telemetry Dispatcher & Event Bus</h3>
+                  <span class="badge-indigo">PostgreSQL Ingestion • Real-Time ACID</span>
+                </div>
+                <p class="panel-desc">
+                  Simulate live causal event propagation across all four pillars: an academic focus session in Study streams JSON telemetry to the Intelligence feature store, calculates cognitive fatigue, and triggers restorative schedule adjustments in LifeOS and budget reallocation in Finance.
+                </p>
+
+                <div class="telemetry-scenario-selector">
+                  <label class="input-label">Select Ecosystem Flow Scenario:</label>
+                  <div class="scenario-pills">
+                    <button class="scen-pill active" onclick="loadTelemetryScenario('study-to-intel')" id="scen-btn-study">
+                      <span class="pill-badge">Flow 01</span>
+                      <span>Study Crunch ➔ Burnout Risk ➔ Life Deload</span>
+                    </button>
+                    <button class="scen-pill" onclick="loadTelemetryScenario('night-owl')" id="scen-btn-night">
+                      <span class="pill-badge">Flow 02</span>
+                      <span>Late Night Work ➔ Circadian Phase Delay ➔ Habit Shield</span>
+                    </button>
+                    <button class="scen-pill" onclick="loadTelemetryScenario('expense-spike')" id="scen-btn-expense">
+                      <span class="pill-badge">Flow 03</span>
+                      <span>Bank Statement ➔ High Velocity ➔ Academic Rebalance</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="slider-group mt-4">
+                  <div class="slider-label-row">
+                    <span>Simulated Study Session Duration</span>
+                    <span class="font-mono text-cyan" id="tel-dur-display">45 mins</span>
+                  </div>
+                  <input type="range" min="15" max="120" step="5" value="45" class="slider" id="tel-dur-slider" oninput="updateTelemetryParams()" />
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-label-row">
+                    <span>Cognitive Flow State (1 - 5)</span>
+                    <span class="font-mono text-emerald" id="tel-flow-display">4.6 / 5.0</span>
+                  </div>
+                  <input type="range" min="1" max="5" step="0.2" value="4.6" class="slider" id="tel-flow-slider" oninput="updateTelemetryParams()" />
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-label-row">
+                    <span>7-Day Sleep Deficit</span>
+                    <span class="font-mono text-amber" id="tel-sleep-display">1.5 hrs</span>
+                  </div>
+                  <input type="range" min="0" max="6" step="0.5" value="1.5" class="slider" id="tel-sleep-slider" oninput="updateTelemetryParams()" />
+                </div>
+
+                <div class="telemetry-action-bar">
+                  <button class="btn btn-emerald-action" id="tel-dispatch-btn" onclick="runTelemetryPipelineSimulation()">
+                    <span id="tel-btn-icon">⚡</span>
+                    <span id="tel-btn-text">Dispatch Live Cross-Module Event</span>
+                  </button>
+                  <button class="btn btn-outline" onclick="copyTelemetryEventPayload()">
+                    <span>📋 Copy Event JSON</span>
+                  </button>
+                </div>
+
+                <div class="pipeline-status-banner" id="pipeline-status-banner">
+                  <span class="status-pulse-dot"></span>
+                  <span id="pipeline-status-text">Event Bus Ready • Awaiting Event Ingestion</span>
+                </div>
+              </div>
+
+              <!-- Right: Stepper & JSON Viewer -->
+              <div class="panel-right">
+                <div class="telemetry-pipeline-stepper">
+                  <div class="stepper-header">
+                    <span class="stepper-title">Orchestration Trace Pipeline</span>
+                    <span class="stepper-hash font-mono" id="tel-trace-id">TRACE-7F3A9C</span>
+                  </div>
+
+                  <div class="pipeline-steps">
+                    <div class="pipe-step" id="pipe-step-1">
+                      <div class="pipe-step-icon">🎓</div>
+                      <div class="pipe-step-content">
+                        <div class="pipe-step-title">1. NextOmni Study — Event Ingestion</div>
+                        <div class="pipe-step-desc" id="pipe-desc-1">Emitted <code>study.session.completed</code> with FSRS stability metrics.</div>
+                      </div>
+                      <div class="pipe-step-badge badge-idle" id="pipe-badge-1">Ready</div>
+                    </div>
+
+                    <div class="pipe-step" id="pipe-step-2">
+                      <div class="pipe-step-icon">🧠</div>
+                      <div class="pipe-step-content">
+                        <div class="pipe-step-title">2. NextOmni Intelligence — Causal Inference</div>
+                        <div class="pipe-step-desc" id="pipe-desc-2">GBM Burnout Model evaluated risk probability and feature store delta.</div>
+                      </div>
+                      <div class="pipe-step-badge badge-idle" id="pipe-badge-2">Standby</div>
+                    </div>
+
+                    <div class="pipe-step" id="pipe-step-3">
+                      <div class="pipe-step-icon">🌿</div>
+                      <div class="pipe-step-content">
+                        <div class="pipe-step-title">3. NextOmni Life — Circadian Recalibration</div>
+                        <div class="pipe-step-desc" id="pipe-desc-3">Adjusted wind-down schedule and generated debrief reflection prompt.</div>
+                      </div>
+                      <div class="pipe-step-badge badge-idle" id="pipe-badge-3">Standby</div>
+                    </div>
+
+                    <div class="pipe-step" id="pipe-step-4">
+                      <div class="pipe-step-icon">💳</div>
+                      <div class="pipe-step-content">
+                        <div class="pipe-step-title">4. NextOmni Finance — Academic ROI Ledger</div>
+                        <div class="pipe-step-desc" id="pipe-desc-4">Logged high-precision BCMath return on study time vs tool cost.</div>
+                      </div>
+                      <div class="pipe-step-badge badge-idle" id="pipe-badge-4">Standby</div>
+                    </div>
+                  </div>
+
+                  <div class="telemetry-json-viewer">
+                    <div class="tjv-header">
+                      <div class="tjv-tabs">
+                        <button class="tjv-tab active" onclick="switchJsonView('event')" id="tjv-tab-event">study_event.json</button>
+                        <button class="tjv-tab" onclick="switchJsonView('ml')" id="tjv-tab-ml">ml_inference.json</button>
+                        <button class="tjv-tab" onclick="switchJsonView('schema')" id="tjv-tab-schema">openapi_spec.json</button>
+                      </div>
+                      <span class="tjv-latency font-mono" id="tjv-latency">ACID Guaranteed</span>
+                    </div>
+                    <pre class="tjv-code font-mono" id="tjv-code-content"></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1385,6 +1522,13 @@
       <p class="hm-desc">Real-time status of local development endpoints and remote production edge gateways.</p>
       
       <div class="hm-service-list">
+        <div class="hm-item" id="hm-main">
+          <div class="hm-item-info">
+            <strong>NextOmni Main (Master Portal)</strong>
+            <span>http://localhost:5000/api/v1/health</span>
+          </div>
+          <span class="hm-badge badge-checking">Checking...</span>
+        </div>
         <div class="hm-item" id="hm-life">
           <div class="hm-item-info">
             <strong>NextOmni Life (Web & AI Engine)</strong>

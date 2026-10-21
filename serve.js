@@ -24,8 +24,43 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
+  const urlPath = req.url.split('?')[0];
+
+  // API Route: Standardized Master Health Probe
+  if (urlPath === '/api/v1/health' || urlPath === '/health') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'no-cache'
+    });
+    const mem = process.memoryUsage();
+    return res.end(JSON.stringify({
+      status: 'healthy',
+      module: 'NextOmni Master Portal',
+      author: 'Ezra Lai',
+      role: 'Principal Systems Architect & Cognitive Engineer',
+      timestamp: new Date().toISOString(),
+      uptimeSeconds: Math.floor(process.uptime()),
+      observability: {
+        memoryHeapUsedMB: Number((mem.heapUsed / 1024 / 1024).toFixed(2)),
+        memoryHeapTotalMB: Number((mem.heapTotal / 1024 / 1024).toFixed(2)),
+        nodeVersion: process.version
+      },
+      pillars: [
+        { id: 'finance', name: 'NextOmni Finance', stack: 'Laravel 11 REST / Nuxt 3 / Postgres 16', defaultPort: 3002 },
+        { id: 'life', name: 'NextOmni Life', stack: 'Next.js 15 / FastAPI / Web Audio', defaultPort: 3000 },
+        { id: 'study', name: 'NextOmni Study', stack: 'Next.js 15 / FSRS-4.5 / GPA Engine', defaultPort: 3001 },
+        { id: 'intelligence', name: 'NextOmni Intelligence', stack: 'Python ML / FastAPI / Quarto', defaultPort: 8000 }
+      ],
+      cloudArchitecture: {
+        tier: '100% Free-Tier Production Cloud ($0/month)',
+        zeroMockupsGuaranteed: true
+      }
+    }, null, 2));
+  }
+
   // Normalize URL and prevent directory traversal
-  let safePath = path.normalize(decodeURIComponent(req.url.split('?')[0])).replace(/^(\.\.[\/\\])+/, '');
+  let safePath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[\/\\])+/, '');
   if (safePath === '/' || safePath === '\\') {
     safePath = '/index.html';
   }

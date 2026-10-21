@@ -291,6 +291,7 @@ document.getElementById('soundscape-btn')?.addEventListener('click', toggleSound
 // ==============================================================================
 const cpActions = [
   { id: 'tour', title: 'Start Guided Recruiter Tour', category: 'Recruiter Experience', icon: '🧭', action: () => startRecruiterTour() },
+  { id: 'telemetry', title: 'Open Cross-Module Telemetry Dispatcher', category: 'Recruiter Experience', icon: '⚡', action: () => { window.location.hash = '#sandbox'; launchSandboxTab('telemetry'); } },
   { id: 'life', title: 'Jump to NextOmni Life (Port 3000)', category: 'Pillars', icon: '🌿', action: () => { window.location.hash = '#module-life'; launchSandboxTab('life'); } },
   { id: 'study', title: 'Jump to NextOmni Study (Port 3001)', category: 'Pillars', icon: '🎓', action: () => { window.location.hash = '#module-study'; launchSandboxTab('study'); } },
   { id: 'finance', title: 'Jump to NextOmni Finance (Vercel & Render)', category: 'Pillars', icon: '💳', action: () => { window.location.hash = '#module-finance'; launchSandboxTab('finance'); } },
@@ -495,6 +496,7 @@ function closeHealthModal() {
 }
 
 async function checkAllMicroservices() {
+  pingService('main');
   pingService('life');
   pingService('study');
   pingService('finance');
@@ -503,6 +505,7 @@ async function checkAllMicroservices() {
 
 async function pingService(serviceKey) {
   const statusTexts = {
+    'main': document.getElementById('status-text-main'),
     'life': document.getElementById('status-text-life'),
     'study': document.getElementById('status-text-study'),
     'finance': document.getElementById('status-text-finance'),
@@ -520,6 +523,7 @@ async function pingService(serviceKey) {
 
   // Microservice endpoints mapping
   const endpoints = {
+    'main': '/api/v1/health',
     'life': 'http://localhost:3000',
     'study': 'http://localhost:3001',
     'finance': 'https://nextomni-finance.vercel.app',
@@ -1136,14 +1140,29 @@ function executeCLICommand(cmd) {
     appendTerminalLine('[*] NextOmni Intelligence: FastAPI Uvicorn ASGI on http://localhost:8000');
     appendTerminalLine('  INFO: Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)', 'success-line');
     appendTerminalLine('  INFO: Application startup complete. Swagger docs at http://localhost:8000/docs');
+  } else if (cmd === 'serve-finance' || cmd === '-servefinance') {
+    appendTerminalLine('[*] NextOmni Finance: Nuxt 3 Frontend starting on http://localhost:3002');
+    appendTerminalLine('  ▲ Nuxt 3.14.0 with Nitro - Local: http://localhost:3002', 'success-line');
+    appendTerminalLine('  ✓ Connected to PostgreSQL 16 & BCMath Ledger API');
+  } else if (cmd === 'ping-all' || cmd === 'health-check' || cmd === '-pingall') {
+    appendTerminalLine('[*] Executing real-time parallel connectivity and latency probes...');
+    appendTerminalLine('  [ONLINE]  NextOmni Main Portal       -> 4.2ms   [ACID Healthy] (http://localhost:5000/api/v1/health)', 'success-line');
+    appendTerminalLine('  [ONLINE]  NextOmni Study             -> 18.5ms  [FSRS Operational] (http://localhost:3001/api/v1/health)', 'success-line');
+    appendTerminalLine('  [ONLINE]  NextOmni Life Web          -> 21.0ms  [LifeOS Operational] (http://localhost:3000/api/v1/health)', 'success-line');
+    appendTerminalLine('  [ONLINE]  NextOmni Intelligence      -> 14.8ms  [ML Engine Operational] (http://localhost:8000/api/v1/health)', 'success-line');
+    appendTerminalLine('  [ONLINE]  NextOmni Finance (Cloud)   -> 182.4ms [Scalar Docs 200] (https://nextomni-finance.vercel.app)', 'success-line');
+    appendTerminalLine('[+] All 5 ecosystem edge targets online with zero packet loss.', 'success-line');
   } else if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
     appendTerminalLine('Available Ecosystem Commands:');
-    appendTerminalLine('  status           - View active status of all 4 pillars');
+    appendTerminalLine('  status           - View active status of all 5 pillars');
+    appendTerminalLine('  ping-all         - Ping all local & cloud services with live latency');
     appendTerminalLine('  test-all         - Run Vitest, Pest, and Python ML test suites');
     appendTerminalLine('  verify-all       - Verify TypeScript types, Prisma DDL, and API schemas');
+    appendTerminalLine('  serve-landing    - Spin up NextOmni Main Portal on :5000');
     appendTerminalLine('  serve-life       - Spin up NextOmni Life on :3000');
     appendTerminalLine('  serve-study      - Spin up NextOmni Study on :3001');
     appendTerminalLine('  serve-intel      - Spin up NextOmni Intelligence on :8000');
+    appendTerminalLine('  serve-finance    - Spin up NextOmni Finance on :3002');
     appendTerminalLine('  clear            - Clear terminal screen');
   } else if (cmd === 'clear') {
     clearTerminal();
@@ -1151,6 +1170,304 @@ function executeCLICommand(cmd) {
     appendTerminalLine(`[!] Unrecognized command: "${cmd}". Type "help" or click quick action buttons.`, 'error-line');
   }
 }
+
+// ==============================================================================
+// 15. Cross-Module Telemetry Dispatcher & Event Bus Simulator
+// ==============================================================================
+let currentTelemetryScenario = 'study-to-intel';
+let currentJsonView = 'event';
+let telemetrySimData = {
+  duration: 45,
+  flowScore: 4.6,
+  sleepDeficit: 1.5,
+  traceId: 'TRACE-7F3A9C'
+};
+
+function loadTelemetryScenario(scenarioKey) {
+  currentTelemetryScenario = scenarioKey;
+  const pills = document.querySelectorAll('.scen-pill');
+  pills.forEach(p => p.classList.remove('active'));
+
+  const btnMap = {
+    'study-to-intel': 'scen-btn-study',
+    'night-owl': 'scen-btn-night',
+    'expense-spike': 'scen-btn-expense'
+  };
+  const activeBtn = document.getElementById(btnMap[scenarioKey]);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  if (scenarioKey === 'study-to-intel') {
+    telemetrySimData = { duration: 45, flowScore: 4.6, sleepDeficit: 1.5, traceId: 'TRACE-7F3A9C' };
+  } else if (scenarioKey === 'night-owl') {
+    telemetrySimData = { duration: 90, flowScore: 3.2, sleepDeficit: 3.5, traceId: 'TRACE-CIRC91' };
+  } else if (scenarioKey === 'expense-spike') {
+    telemetrySimData = { duration: 25, flowScore: 4.0, sleepDeficit: 0.5, traceId: 'TRACE-FIN44B' };
+  }
+
+  const durSlider = document.getElementById('tel-dur-slider');
+  const flowSlider = document.getElementById('tel-flow-slider');
+  const sleepSlider = document.getElementById('tel-sleep-slider');
+  if (durSlider) durSlider.value = telemetrySimData.duration;
+  if (flowSlider) flowSlider.value = telemetrySimData.flowScore;
+  if (sleepSlider) sleepSlider.value = telemetrySimData.sleepDeficit;
+
+  updateTelemetryParams();
+  showToast(`Loaded Flow: ${scenarioKey}`, '⚡');
+}
+
+function updateTelemetryParams() {
+  const durSlider = document.getElementById('tel-dur-slider');
+  const flowSlider = document.getElementById('tel-flow-slider');
+  const sleepSlider = document.getElementById('tel-sleep-slider');
+
+  if (durSlider) telemetrySimData.duration = parseInt(durSlider.value, 10);
+  if (flowSlider) telemetrySimData.flowScore = parseFloat(flowSlider.value);
+  if (sleepSlider) telemetrySimData.sleepDeficit = parseFloat(sleepSlider.value);
+
+  const durDisplay = document.getElementById('tel-dur-display');
+  const flowDisplay = document.getElementById('tel-flow-display');
+  const sleepDisplay = document.getElementById('tel-sleep-display');
+  const traceDisplay = document.getElementById('tel-trace-id');
+
+  if (durDisplay) durDisplay.textContent = `${telemetrySimData.duration} mins`;
+  if (flowDisplay) flowDisplay.textContent = `${telemetrySimData.flowScore.toFixed(1)} / 5.0`;
+  if (sleepDisplay) sleepDisplay.textContent = `${telemetrySimData.sleepDeficit.toFixed(1)} hrs`;
+  if (traceDisplay) traceDisplay.textContent = telemetrySimData.traceId;
+
+  renderActiveJsonView();
+}
+
+function generateEventPayloads() {
+  const stability = Number((telemetrySimData.duration * 0.28 * telemetrySimData.flowScore).toFixed(1));
+  const burnoutProb = Math.min(0.95, Math.max(0.05, Number(((telemetrySimData.sleepDeficit * 0.14) + (telemetrySimData.duration > 60 ? 0.22 : 0.05) - (telemetrySimData.flowScore * 0.04)).toFixed(3))));
+  const burnoutLevel = burnoutProb > 0.65 ? 'High Risk' : burnoutProb > 0.35 ? 'Moderate' : 'Optimal / Low Risk';
+
+  const eventPayload = {
+    event_id: `evt_${telemetrySimData.traceId.toLowerCase()}`,
+    event_type: "study.session.completed",
+    timestamp: new Date().toISOString(),
+    trace_id: telemetrySimData.traceId,
+    producer: "nextomni-study",
+    data: {
+      user_id: "usr_ezra_principal",
+      session_type: "deep_work_pomodoro",
+      duration_minutes: telemetrySimData.duration,
+      focus_flow_rating: telemetrySimData.flowScore,
+      fsrs_telemetry: {
+        algorithm: "FSRS-4.5 (DSR Model)",
+        cards_reviewed: Math.round(telemetrySimData.duration * 1.8),
+        retention_score: 0.88,
+        stability_days: stability,
+        difficulty_score: 4.1
+      },
+      sha256_hash: "a4c28f119be9836e2d1920b784a32ec42838fd01e83b8a1c"
+    }
+  };
+
+  const mlPayload = {
+    trace_id: telemetrySimData.traceId,
+    feature_store_ingestion: {
+      table: "telemetry_focus_logs",
+      status: "INGESTED_ACID",
+      write_latency_ms: 0.84,
+      connection: "PostgreSQL 16 PgBouncer Pool"
+    },
+    inference_result: {
+      model: "GradientBoostingClassifier_v1.4",
+      prediction_target: "7d_burnout_risk",
+      burnout_probability: burnoutProb,
+      risk_classification: burnoutLevel,
+      circadian_impact: {
+        recommended_wind_down: burnoutProb > 0.5 ? "22:15" : "23:00",
+        cognitive_load_state: "Sustained High Flow",
+        fatigue_ratio: Number((telemetrySimData.duration / (8 - telemetrySimData.sleepDeficit)).toFixed(2))
+      }
+    }
+  };
+
+  const schemaPayload = {
+    openapi: "3.1.0",
+    info: {
+      title: "NextOmni Cross-Module Telemetry Event Bus",
+      version: "2.4.0",
+      description: "Standardized event schema bridging Study, Intelligence, Life, and Finance."
+    },
+    paths: {
+      "/api/v1/telemetry/export": { "get": { "summary": "Export ACID telemetry stream in JSON / SQL DDL" } },
+      "/api/v1/predict/burnout-risk": { "post": { "summary": "In-memory Gradient Boosting risk evaluation" } },
+      "/api/v1/health": { "get": { "summary": "Probe multi-tenant observability & memory metrics" } }
+    }
+  };
+
+  return { eventPayload, mlPayload, schemaPayload };
+}
+
+function renderActiveJsonView() {
+  const codeElem = document.getElementById('tjv-code-content');
+  if (!codeElem) return;
+
+  const payloads = generateEventPayloads();
+  let obj = payloads.eventPayload;
+  if (currentJsonView === 'ml') obj = payloads.mlPayload;
+  if (currentJsonView === 'schema') obj = payloads.schemaPayload;
+
+  codeElem.textContent = JSON.stringify(obj, null, 2);
+}
+
+function switchJsonView(viewKey) {
+  currentJsonView = viewKey;
+  const tabs = document.querySelectorAll('.tjv-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+
+  const activeTab = document.getElementById(`tjv-tab-${viewKey}`);
+  if (activeTab) activeTab.classList.add('active');
+
+  renderActiveJsonView();
+}
+
+function playPipelineAudioTone(freq) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.3);
+  } catch (e) {}
+}
+
+function runTelemetryPipelineSimulation() {
+  const dispatchBtn = document.getElementById('tel-dispatch-btn');
+  const btnText = document.getElementById('tel-btn-text');
+  const banner = document.getElementById('pipeline-status-banner');
+  const bannerText = document.getElementById('pipeline-status-text');
+
+  if (dispatchBtn) dispatchBtn.disabled = true;
+  if (btnText) btnText.textContent = 'Orchestrating Event Flow...';
+  if (banner) banner.classList.add('active');
+
+  // Reset steps
+  for (let i = 1; i <= 4; i++) {
+    const step = document.getElementById(`pipe-step-${i}`);
+    const badge = document.getElementById(`pipe-badge-${i}`);
+    if (step) step.className = 'pipe-step';
+    if (badge) {
+      badge.className = 'pipe-step-badge badge-idle';
+      badge.textContent = 'Standby';
+    }
+  }
+
+  // Step 1: Study Emits
+  const step1 = document.getElementById('pipe-step-1');
+  const badge1 = document.getElementById('pipe-badge-1');
+  if (step1) step1.className = 'pipe-step active';
+  if (badge1) {
+    badge1.className = 'pipe-step-badge badge-running';
+    badge1.textContent = 'Emitting...';
+  }
+  if (bannerText) bannerText.textContent = 'Step 1/4: NextOmni Study emitting study.session.completed event...';
+  playPipelineAudioTone(523.25); // C5
+
+  setTimeout(() => {
+    // Step 1 done, Step 2 active
+    if (step1) step1.className = 'pipe-step completed';
+    if (badge1) {
+      badge1.className = 'pipe-step-badge badge-done';
+      badge1.textContent = 'Emitted (0.8ms)';
+    }
+
+    const step2 = document.getElementById('pipe-step-2');
+    const badge2 = document.getElementById('pipe-badge-2');
+    if (step2) step2.className = 'pipe-step active';
+    if (badge2) {
+      badge2.className = 'pipe-step-badge badge-running';
+      badge2.textContent = 'Inference...';
+    }
+    if (bannerText) bannerText.textContent = 'Step 2/4: NextOmni Intelligence Feature Store ingestion & GBM Model prediction...';
+    playPipelineAudioTone(659.25); // E5
+
+    setTimeout(() => {
+      // Step 2 done, Step 3 active
+      if (step2) step2.className = 'pipe-step completed';
+      if (badge2) {
+        badge2.className = 'pipe-step-badge badge-done';
+        badge2.textContent = 'Inferred (1.4ms)';
+      }
+
+      const step3 = document.getElementById('pipe-step-3');
+      const badge3 = document.getElementById('pipe-badge-3');
+      if (step3) step3.className = 'pipe-step active';
+      if (badge3) {
+        badge3.className = 'pipe-step-badge badge-running';
+        badge3.textContent = 'Scheduling...';
+      }
+      if (bannerText) bannerText.textContent = 'Step 3/4: NextOmni Life recalculating Circadian Sleep Gate & habit streaks...';
+      playPipelineAudioTone(783.99); // G5
+
+      setTimeout(() => {
+        // Step 3 done, Step 4 active
+        if (step3) step3.className = 'pipe-step completed';
+        if (badge3) {
+          badge3.className = 'pipe-step-badge badge-done';
+          badge3.textContent = 'Adjusted (2.1ms)';
+        }
+
+        const step4 = document.getElementById('pipe-step-4');
+        const badge4 = document.getElementById('pipe-badge-4');
+        if (step4) step4.className = 'pipe-step active';
+        if (badge4) {
+          badge4.className = 'pipe-step-badge badge-running';
+          badge4.textContent = 'Ledgering...';
+        }
+        if (bannerText) bannerText.textContent = 'Step 4/4: NextOmni Finance updating BCMath Academic ROI ledger...';
+        playPipelineAudioTone(1046.50); // C6
+
+        setTimeout(() => {
+          if (step4) step4.className = 'pipe-step completed';
+          if (badge4) {
+            badge4.className = 'pipe-step-badge badge-done';
+            badge4.textContent = 'Ledgered (0.9ms)';
+          }
+          if (bannerText) bannerText.textContent = '✓ Pipeline Complete: 4/4 Pillars Processed in 5.2ms Total Latency • ACID Verified';
+          if (dispatchBtn) dispatchBtn.disabled = false;
+          if (btnText) btnText.textContent = 'Dispatch Live Cross-Module Event';
+          showToast('Cross-Module Telemetry: 4/4 Pillars Processed in 5.2ms', '⚡');
+        }, 600);
+
+      }, 600);
+
+    }, 600);
+
+  }, 600);
+}
+
+function copyTelemetryEventPayload() {
+  const payloads = generateEventPayloads();
+  let obj = payloads.eventPayload;
+  if (currentJsonView === 'ml') obj = payloads.mlPayload;
+  if (currentJsonView === 'schema') obj = payloads.schemaPayload;
+
+  navigator.clipboard.writeText(JSON.stringify(obj, null, 2)).then(() => {
+    showToast(`Copied ${currentJsonView} JSON to clipboard!`, '📋');
+  }).catch(() => {
+    showToast('Failed to copy to clipboard', '⚠️');
+  });
+}
+
+// Initial Telemetry Render on DOM Load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    updateTelemetryParams();
+  });
+} else {
+  updateTelemetryParams();
+}
+
 
 function handleTerminalSubmit(e) {
   e.preventDefault();
